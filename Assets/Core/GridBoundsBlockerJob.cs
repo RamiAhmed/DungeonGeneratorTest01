@@ -8,15 +8,13 @@ namespace Assets.Core
     {
         private readonly int _cols;
         private readonly int _rows;
-        private readonly float _sensitivity;
 
         private NativeArray<byte> _gridState;
 
-        public GridBoundsBlockerJob(NativeArray<byte> gridState, int cols, int rows, float sensitivity)
+        public GridBoundsBlockerJob(NativeArray<byte> gridState, int cols, int rows)
         {
             _cols = cols;
             _rows = rows;
-            _sensitivity = sensitivity;
             _gridState = gridState;
         }
 

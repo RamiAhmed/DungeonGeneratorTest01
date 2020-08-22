@@ -24,7 +24,7 @@ namespace Assets.Core
             _cellStack = new NativeArray<int>(count, Allocator.TempJob);
             _floodState = new NativeArray<byte>(count, Allocator.TempJob);
 
-            var gridBoundsBlockerJob = new GridBoundsBlockerJob(_gridState, options.gridCols, options.gridRows, options.sensitivity);
+            var gridBoundsBlockerJob = new GridBoundsBlockerJob(_gridState, options.gridCols, options.gridRows);
             var gridBoundsBlockerJobHandle = gridBoundsBlockerJob.Schedule(_gridState.Length, options.innerloopBatchCount);
 
             var gridTanBlockerJob = new GridTanBlockerJob(_gridState, options.gridRows, options.sensitivity);
