@@ -16,6 +16,9 @@ public class DebugTestStarter : MonoBehaviour
     [Range(0, 10)]
     public int cellSize = 1;
 
+    [Range(1, 20)]
+    public int innerloopBatchCount = 1;
+
     private bool[] _gridState;
     private bool[] _floodState;
 
@@ -28,7 +31,8 @@ public class DebugTestStarter : MonoBehaviour
             {
                 gridRows = gridRows,
                 gridCols = gridCols,
-                sensitivity = sensitivity
+                sensitivity = sensitivity,
+                innerloopBatchCount = innerloopBatchCount
             });
 
             var (gridState, floodState) = service.Complete();
@@ -59,10 +63,11 @@ public class DebugTestStarter : MonoBehaviour
 
         for (int i = 0; i < _gridState.Length; i++)
         {
-            var (x, y) = GridUtils.GetCoordinates(i, gridRows, gridCols, cellSize);
+            var (x, y) = GridUtils.GetCoordinates(i, gridRows);
+            var position = GridUtils.GetPositionByCoordinates(x, y, cellSize);
 
             Gizmos.color = x == 1 && y == 1 ? Color.yellow : _floodState[i] ? Color.blue : (_gridState[i] ? Color.red : Color.green);
-            Gizmos.DrawCube(new Vector3(x, 0, y), Vector3.one * cellSize);
+            Gizmos.DrawCube(position, Vector3.one * cellSize);
         }
     }
 }

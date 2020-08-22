@@ -7,15 +7,17 @@ namespace Assets.Core
     public struct GridFloodGateJob : IJob
     {
         private readonly int _cols;
+        private readonly int _rows;
 
         [ReadOnly]
         private readonly NativeArray<byte> _floodState;
 
         private NativeArray<byte> _gridState;
 
-        public GridFloodGateJob(NativeArray<byte> gridState, NativeArray<byte> floodState, int cols)
+        public GridFloodGateJob(NativeArray<byte> gridState, NativeArray<byte> floodState, int cols, int rows)
         {
             _cols = cols;
+            _rows = rows;
             _gridState = gridState;
             _floodState = floodState;
         }
@@ -34,26 +36,32 @@ namespace Assets.Core
                 if (_floodState[index] != GridStateConstants.FLOODED)
                     continue;
 
-                var topLeft = index - 1 + _cols;
-                var topRight = index + 1 + _cols;
+                var (x, y) = GridUtils.GetCoordinates(index, _rows);
+                var topLeft = GridUtils.GetIndex(x - 1, y + 1, _rows);
+                var topRight = GridUtils.GetIndex(x + 1, y - 1, _rows);
+                var botLeft = GridUtils.GetIndex(x - 1, y - 1, _rows);
+                var botRight = GridUtils.GetIndex(x + 1, y - 1, _rows);
 
-                var freeNeighbourIdx = -1;
-                if (_gridState[topLeft] == GridStateConstants.FREE)
+                int targetIndex;
+                if (_gridState[topLeft] == GridStateConstants.FREE || _gridState[botLeft] == GridStateConstants.FREE)
                 {
-                    freeNeighbourIdx = topLeft;
+                    targetIndex = x - 1; // left cell
                 }
-                else if (_gridState[topRight] == GridStateConstants.FREE)
+                else if (_gridState[topRight] == GridStateConstants.FREE || _gridState[botRight] == GridStateConstants.FREE)
                 {
-                    freeNeighbourIdx = topRight;
+                    targetIndex = x + 1; // right cell
                 }
-
-                if (freeNeighbourIdx == -1)
+                else
                 {
                     continue;
                 }
 
+                var (targetX, targetY) = GridUtils.GetCoordinates(targetIndex, _rows);
+                if (GridUtils.HasOutOfBoundsNeighbour(targetX, targetY, _rows, _cols))
+                    continue;
+
                 //UnityEngine.Debug.Log($"index: {index} has {freeNeighbours} free neighbours, delta: {freeNeighbourIdx - index}");
-                _gridState[index + (freeNeighbourIdx - index) + 1] = GridStateConstants.FREE;
+                _gridState[targetIndex] = GridStateConstants.FREE;
             }
         }
     }

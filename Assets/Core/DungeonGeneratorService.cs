@@ -11,7 +11,7 @@ namespace Assets.Core
         private NativeArray<byte> _floodState;
         private NativeArray<byte> _gridState;
 
-        private NativeArray<JobHandle> _jobHandles = new NativeArray<JobHandle>(5, Allocator.TempJob);
+        private NativeArray<JobHandle> _jobHandles = new NativeArray<JobHandle>(6, Allocator.TempJob);
         private JobHandle _jobHandle;
         private Stopwatch _timer;
 
@@ -24,26 +24,30 @@ namespace Assets.Core
             _cellStack = new NativeArray<int>(count, Allocator.TempJob);
             _floodState = new NativeArray<byte>(count, Allocator.TempJob);
 
-            var gridBlockerJob = new GridBlockerJob(_gridState, options.gridCols, options.gridRows, options.sensitivity);
-            var gridBlockerJobHandle = gridBlockerJob.Schedule();
+            var gridBoundsBlockerJob = new GridBoundsBlockerJob(_gridState, options.gridCols, options.gridRows, options.sensitivity);
+            var gridBoundsBlockerJobHandle = gridBoundsBlockerJob.Schedule(_gridState.Length, options.innerloopBatchCount);
+
+            var gridTanBlockerJob = new GridTanBlockerJob(_gridState, options.gridRows, options.sensitivity);
+            var gridTanBlockerJobHandle = gridTanBlockerJob.Schedule(_gridState.Length, options.innerloopBatchCount, gridBoundsBlockerJobHandle);
 
             var floodFillJob = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows);
-            var floodFillJobHandle = floodFillJob.Schedule(gridBlockerJobHandle);
+            var floodFillJobHandle = floodFillJob.Schedule(gridTanBlockerJobHandle);
 
-            var gridFloodGateJob = new GridFloodGateJob(_gridState, _floodState, options.gridCols);
+            var gridFloodGateJob = new GridFloodGateJob(_gridState, _floodState, options.gridCols, options.gridRows);
             var gridFloodGateJobHandle = gridFloodGateJob.Schedule(floodFillJobHandle);
 
             var floodFillJob2 = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows);
             var floodFillJob2Handle = floodFillJob2.Schedule(gridFloodGateJobHandle);
 
             var gridFillerJob = new GridFillerJob(_gridState, _floodState);
-            var gridFillerJobHandle = gridFillerJob.Schedule(_gridState.Length, 1, floodFillJob2Handle);
+            var gridFillerJobHandle = gridFillerJob.Schedule(_gridState.Length, options.innerloopBatchCount, floodFillJob2Handle);
 
-            _jobHandles[0] = gridBlockerJobHandle;
-            _jobHandles[1] = floodFillJobHandle;
-            _jobHandles[2] = gridFloodGateJobHandle;
-            _jobHandles[3] = floodFillJob2Handle;
-            _jobHandles[4] = gridFillerJobHandle;
+            _jobHandles[0] = gridBoundsBlockerJobHandle;
+            _jobHandles[1] = gridTanBlockerJobHandle;
+            _jobHandles[2] = floodFillJobHandle;
+            _jobHandles[3] = gridFloodGateJobHandle;
+            _jobHandles[4] = floodFillJob2Handle;
+            _jobHandles[5] = gridFillerJobHandle;
 
             _jobHandle = JobHandle.CombineDependencies(_jobHandles);
         }
@@ -69,5 +73,6 @@ namespace Assets.Core
         public int gridRows;
         public int gridCols;
         public float sensitivity;
+        public int innerloopBatchCount;
     }
 }

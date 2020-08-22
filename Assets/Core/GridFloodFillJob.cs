@@ -46,7 +46,7 @@ namespace Assets.Core
                 _floodState[i] = GridStateConstants.UNSET;
 
             // Add starting cell - must be free
-            Push(_rows + 1); // we expect the cell at 1,1 to be free!
+            Push(GridUtils.GetIndex(1, 1, _rows)); // we expect the cell at 1,1 to be free!
 
             do
             {
@@ -56,21 +56,25 @@ namespace Assets.Core
 
                 _floodState[index] = GridStateConstants.FLOODED;
 
+                var (x, y) = GridUtils.GetCoordinates(index, _rows);
+                if (GridUtils.HasOutOfBoundsNeighbour(x, y, _rows, _cols))
+                    continue;
+
                 // Left
-                var left = index - 1;
+                var left = GridUtils.GetIndex(x - 1, y, _rows);
                 if (_gridState[left] == GridStateConstants.FREE && _floodState[left] != GridStateConstants.FLOODED)
                     Push(left);
 
                 // Right
-                var right = index + 1;
+                var right = GridUtils.GetIndex(x + 1, y, _rows);
                 if (_gridState[right] == GridStateConstants.FREE && _floodState[right] != GridStateConstants.FLOODED)
                     Push(right);
 
-                var up = index + _cols;
+                var up = GridUtils.GetIndex(x, y + 1, _rows);
                 if (_gridState[up] == GridStateConstants.FREE && _floodState[up] != GridStateConstants.FLOODED)
                     Push(up);
 
-                var down = index - _cols;
+                var down = GridUtils.GetIndex(x, y - 1, _rows);
                 if (_gridState[down] == GridStateConstants.FREE && _floodState[down] != GridStateConstants.FLOODED)
                     Push(down);
 

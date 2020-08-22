@@ -152,9 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a17af12ad8290a645afab2265d48465a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridRows: 250
-  gridCols: 250
-  sensitivity: 0.35
+  gridRows: 40
+  gridCols: 20
+  sensitivity: 0.2
   cellSize: 2
 --- !u!4 &345831418
 Transform:
