@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace Assets.Core
 
         public void Execute()
         {
+            var watch = Stopwatch.StartNew();
             for (int x = 0; x < _cols; x++)
             {
                 for (int y = 0; y < _rows; y++)
@@ -39,6 +41,7 @@ namespace Assets.Core
                     _gridState[i] = IsCellBlocked(x, y) ? BLOCKED : FREE;
                 }
             }
+            UnityEngine.Debug.Log($"{this} took {watch.Elapsed}");
         }
 
         private bool IsCellBlocked(int x, int y)

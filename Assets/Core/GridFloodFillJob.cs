@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,13 @@ namespace Assets.Core
 
         public void Execute()
         {
+            var watch = Stopwatch.StartNew();
+            FloodFill();
+            UnityEngine.Debug.Log($"{this} took {watch.Elapsed}");
+        }
+
+        private void FloodFill() 
+        { 
             // we use byte.MaxValue as an 'unset' state value
             for (int i = 0; i < _cellStack.Length; i++)
                 _cellStack[i] = UNSET;

@@ -32,6 +32,13 @@ namespace Assets.Core
 
         public void Execute()
         {
+            var watch = Stopwatch.StartNew();
+            FloodGate();
+            UnityEngine.Debug.Log($"{this} took {watch.Elapsed}");
+        }
+
+        private void FloodGate()
+        { 
             for (var index = _cols; index < _gridState.Length - _cols; index++)
             {
                 if (_floodState[index] != FLOODED)
