@@ -16,8 +16,10 @@ namespace Assets.Core
         public const byte BLOCKED = 1;
         public const byte FLOODED = byte.MaxValue - 1;
 
+        [ReadOnly]
+        private readonly NativeArray<byte> _floodState;
+
         private NativeArray<byte> _gridState;
-        private NativeArray<byte> _floodState;
 
         public GridFillerJob(NativeArray<byte> gridState, NativeArray<byte> floodState)
         {

@@ -17,7 +17,9 @@ namespace Assets.Core
         private readonly int _cols;
         private readonly int _rows;
 
-        private NativeArray<byte> _gridState;
+        [ReadOnly]
+        private readonly NativeArray<byte> _gridState;
+
         private NativeArray<byte> _floodState;
         private NativeArray<int> _cellStack;
 

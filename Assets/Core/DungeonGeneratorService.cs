@@ -34,7 +34,7 @@ namespace Assets.Core
             var floodFillJob = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows);
             var floodFillJobHandle = floodFillJob.Schedule(gridBlockerJobHandle);
 
-            var gridFloodGateJob = new GridFloodGateJob(_gridState, _floodState, options.gridCols, options.gridRows);
+            var gridFloodGateJob = new GridFloodGateJob(_gridState, _floodState, options.gridCols);
             var gridFloodGateJobHandle = gridFloodGateJob.Schedule(floodFillJobHandle);
 
             var floodFillJob2 = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows);

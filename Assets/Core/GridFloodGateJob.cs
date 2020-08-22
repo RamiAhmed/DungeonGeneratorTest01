@@ -17,15 +17,15 @@ namespace Assets.Core
         public const byte FLOODED = byte.MaxValue - 1;
 
         private readonly int _cols;
-        private readonly int _rows;
+
+        [ReadOnly]
+        private readonly NativeArray<byte> _floodState;
 
         private NativeArray<byte> _gridState;
-        private NativeArray<byte> _floodState;
 
-        public GridFloodGateJob(NativeArray<byte> gridState, NativeArray<byte> floodState, int cols, int rows)
+        public GridFloodGateJob(NativeArray<byte> gridState, NativeArray<byte> floodState, int cols)
         {
             _cols = cols;
-            _rows = rows;
             _gridState = gridState;
             _floodState = floodState;
         }
