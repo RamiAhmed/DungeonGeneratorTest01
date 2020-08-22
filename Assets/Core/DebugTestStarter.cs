@@ -1,10 +1,19 @@
 ﻿using Assets.Core;
+using Assets.Core.Grid;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
+using UnityStandardAssets.Cameras;
 
 public class DebugTestStarter : MonoBehaviour
 {
+    [Header("Prefabs")]
+    public Transform parent;
+    public GameObject blockPrefab;
+    public GameObject pathPrefab;
+    public GameObject playerPrefab;
+
+    [Header("Grid")]
     [Range(0, 100000)]
     public int gridRows = 100;
 
@@ -17,6 +26,7 @@ public class DebugTestStarter : MonoBehaviour
     [Range(0, 10)]
     public int cellSize = 1;
 
+    [Header("Jobs")]
     [Range(1, 20)]
     public int innerloopBatchCount = 1;
 
@@ -58,9 +68,29 @@ public class DebugTestStarter : MonoBehaviour
 
         //Debug.Log("Grid state: " + sb.ToString());
         Debug.Log($"Gridstate length: {_gridState.Length:N0}");
+
+        // Place objects representing blocked cells and open paths
+        var placerService = new GridPlacerService(new GridPlacerOptions
+        {
+            parent = parent,
+            blockPrefab = blockPrefab,
+            pathPrefab = pathPrefab,
+            cellSize = cellSize,
+            rows = gridRows,
+            gridState = _gridState
+        });
+
+        placerService.PlaceObjects();
+
+        // Instantiate and place the player prefab
+        var startPos = GridUtils.GetPositionByCoordinates(1, 1, cellSize);
+        var playerGo = GameObject.Instantiate(playerPrefab, startPos, Quaternion.identity);
+
+        /// DEBUG STUFF
+        FindObjectOfType<FreeLookCam>().Target = playerGo.transform;
     }
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         if (_gridState == null)
             return;
