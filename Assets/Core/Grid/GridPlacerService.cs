@@ -16,7 +16,7 @@ namespace Assets.Core.Grid
             var gridState = _options.gridState;
             for (int i = 0; i < gridState.Length; i++)
             {
-                var prefab = gridState[i] ? _options.blockPrefab : _options.pathPrefab;
+                var prefab = gridState[i] == GridStateConstants.BLOCKED ? _options.blockPrefab : _options.pathPrefab;
                 var position = GridUtils.GetPositionByIndex(i, _options.rows, _options.cellSize);
                 var go = Object.Instantiate(prefab, position, Quaternion.identity, _options.parent);
 
@@ -34,7 +34,7 @@ namespace Assets.Core.Grid
         public GameObject blockPrefab;
         public GameObject pathPrefab;
 
-        public bool[] gridState;
+        public byte[] gridState;
 
         public int rows;
         public int cellSize;

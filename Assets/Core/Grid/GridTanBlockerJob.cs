@@ -2,7 +2,7 @@
 using Unity.Jobs;
 using UnityEngine;
 
-namespace Assets.Core
+namespace Assets.Core.Grid
 {
     public struct GridTanBlockerJob : IJobParallelFor
     {

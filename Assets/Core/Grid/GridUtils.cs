@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Core
+namespace Assets.Core.Grid
 {
     public static class GridUtils
     {

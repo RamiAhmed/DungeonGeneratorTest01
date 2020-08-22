@@ -2,7 +2,7 @@
 using Unity.Collections;
 using Unity.Jobs;
 
-namespace Assets.Core
+namespace Assets.Core.Grid
 {
     public struct GridFloodGateJob : IJob
     {

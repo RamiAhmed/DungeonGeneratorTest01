@@ -26,13 +26,16 @@ public class DebugTestStarter : MonoBehaviour
     [Range(0, 10)]
     public int cellSize = 1;
 
+    public int startX = 1;
+    public int startY = 1;
+
     [Header("Jobs")]
     [Range(1, 20)]
     public int innerloopBatchCount = 1;
 
     public Allocator allocatorType = Allocator.TempJob;
 
-    private bool[] _gridState;
+    private byte[] _gridState;
     private bool[] _floodState;
 
     // Start is called before the first frame update
@@ -46,12 +49,12 @@ public class DebugTestStarter : MonoBehaviour
                 gridCols = gridCols,
                 sensitivity = sensitivity,
                 innerloopBatchCount = innerloopBatchCount,
-                allocatorType = allocatorType
+                allocatorType = allocatorType,
+                startIndex = GridUtils.GetIndex(startX, startY, gridRows)
             });
 
             var (gridState, floodState) = service.Complete();
             _gridState = gridState
-                .Select(s => s > 0)
                 .ToArray();
 
             _floodState = floodState
@@ -83,7 +86,7 @@ public class DebugTestStarter : MonoBehaviour
         placerService.PlaceObjects();
 
         // Instantiate and place the player prefab
-        var startPos = GridUtils.GetPositionByCoordinates(1, 1, cellSize);
+        var startPos = GridUtils.GetPositionByIndex(startX, startY, cellSize) + new Vector3(cellSize * 0.5f, 1f, cellSize * 0.5f);
         var playerGo = GameObject.Instantiate(playerPrefab, startPos, Quaternion.identity);
 
         /// DEBUG STUFF
@@ -100,7 +103,7 @@ public class DebugTestStarter : MonoBehaviour
             var (x, y) = GridUtils.GetCoordinates(i, gridRows);
             var position = GridUtils.GetPositionByCoordinates(x, y, cellSize);
 
-            Gizmos.color = x == 1 && y == 1 ? Color.yellow : _floodState[i] ? Color.blue : (_gridState[i] ? Color.red : Color.green);
+            Gizmos.color = _gridState[i] == GridStateConstants.START ? Color.yellow : _floodState[i] ? Color.blue : (_gridState[i] == GridStateConstants.BLOCKED ? Color.red : Color.green);
             Gizmos.DrawCube(position, Vector3.one * cellSize);
         }
     }

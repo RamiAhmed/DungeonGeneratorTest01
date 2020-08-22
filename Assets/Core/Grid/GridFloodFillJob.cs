@@ -3,12 +3,13 @@ using System.Diagnostics;
 using Unity.Collections;
 using Unity.Jobs;
 
-namespace Assets.Core
+namespace Assets.Core.Grid
 {
     public struct GridFloodFillJob : IJob
     {
         private readonly int _cols;
         private readonly int _rows;
+        private readonly int _startIndex;
 
         [ReadOnly]
         private readonly NativeArray<byte> _gridState;
@@ -18,10 +19,11 @@ namespace Assets.Core
 
         private int _stackCount;
 
-        public GridFloodFillJob(NativeArray<byte> gridState, NativeArray<int> cellStack, NativeArray<byte> floodState, int cols, int rows)
+        public GridFloodFillJob(NativeArray<byte> gridState, NativeArray<int> cellStack, NativeArray<byte> floodState, int cols, int rows, int startIndex)
         {
             _cols = cols;
             _rows = rows;
+            _startIndex = startIndex;
             _gridState = gridState;
             _cellStack = cellStack;
             _floodState = floodState;
@@ -46,7 +48,7 @@ namespace Assets.Core
                 _floodState[i] = GridStateConstants.UNSET;
 
             // Add starting cell - must be free
-            Push(GridUtils.GetIndex(1, 1, _rows)); // we expect the cell at 1,1 to be free!
+            Push(_startIndex);
 
             do
             {

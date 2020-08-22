@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Core.Grid;
+using System;
 using System.Diagnostics;
 using Unity.Collections;
 using Unity.Jobs;
@@ -24,19 +25,22 @@ namespace Assets.Core
             _cellStack = new NativeArray<int>(count, options.allocatorType);
             _floodState = new NativeArray<byte>(count, options.allocatorType);
 
+            // Mark starting cell as such
+            _gridState[options.startIndex] = GridStateConstants.START;
+
             var gridBoundsBlockerJob = new GridBoundsBlockerJob(_gridState, options.gridCols, options.gridRows);
             var gridBoundsBlockerJobHandle = gridBoundsBlockerJob.Schedule(_gridState.Length, options.innerloopBatchCount);
 
             var gridTanBlockerJob = new GridTanBlockerJob(_gridState, options.gridRows, options.sensitivity);
             var gridTanBlockerJobHandle = gridTanBlockerJob.Schedule(_gridState.Length, options.innerloopBatchCount, gridBoundsBlockerJobHandle);
 
-            var floodFillJob = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows);
+            var floodFillJob = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows, options.startIndex);
             var floodFillJobHandle = floodFillJob.Schedule(gridTanBlockerJobHandle);
 
             var gridFloodGateJob = new GridFloodGateJob(_gridState, _floodState, options.gridCols, options.gridRows);
             var gridFloodGateJobHandle = gridFloodGateJob.Schedule(floodFillJobHandle);
 
-            var floodFillJob2 = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows);
+            var floodFillJob2 = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows, options.startIndex);
             var floodFillJob2Handle = floodFillJob2.Schedule(gridFloodGateJobHandle);
 
             var gridFillerJob = new GridFillerJob(_gridState, _floodState);
@@ -68,12 +72,13 @@ namespace Assets.Core
         }
     }
 
-    public struct DungeonGeneratorOptions
+    public class DungeonGeneratorOptions
     {
         public int gridRows;
         public int gridCols;
         public float sensitivity;
         public int innerloopBatchCount;
         public Allocator allocatorType;
+        public int startIndex;
     }
 }
