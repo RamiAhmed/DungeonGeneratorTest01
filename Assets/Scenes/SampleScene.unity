@@ -156,6 +156,8 @@ MonoBehaviour:
   gridCols: 20
   sensitivity: 0.2
   cellSize: 2
+  innerloopBatchCount: 1
+  allocatorType: 3
 --- !u!4 &345831418
 Transform:
   m_ObjectHideFlags: 0
