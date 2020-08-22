@@ -1,9 +1,7 @@
 ﻿using Assets.Core;
 using Assets.Core.Grid;
-using System.Linq;
 using Unity.Collections;
 using UnityEngine;
-using UnityStandardAssets.Cameras;
 
 public class DebugTestStarter : MonoBehaviour
 {
@@ -12,6 +10,7 @@ public class DebugTestStarter : MonoBehaviour
     public GameObject blockPrefab;
     public GameObject pathPrefab;
     public GameObject playerPrefab;
+    public GameObject exitPrefab;
 
     [Header("Grid")]
     [Range(0, 100000)]
@@ -41,9 +40,10 @@ public class DebugTestStarter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        using (var service = new DungeonGeneratorService())
+        var dungeonLoader = new DungeonLoaderService();
+        dungeonLoader.Generate(new DungeonOptions
         {
-            service.Generate(new DungeonGeneratorOptions
+            generatorOptions = new DungeonGeneratorOptions
             {
                 gridRows = gridRows,
                 gridCols = gridCols,
@@ -51,46 +51,17 @@ public class DebugTestStarter : MonoBehaviour
                 innerloopBatchCount = innerloopBatchCount,
                 allocatorType = allocatorType,
                 startIndex = GridUtils.GetIndex(startX, startY, gridRows)
-            });
-
-            var (gridState, floodState) = service.Complete();
-            _gridState = gridState
-                .ToArray();
-
-            _floodState = floodState
-                .Select(s => s == GridStateConstants.FLOODED)
-                .ToArray();
-        }
-
-        //var sb = new StringBuilder(_gridState.Length * 10);
-        //for (int i = 0; i < _gridState.Length; i++)
-        //{
-        //    sb.Append(_gridState[i] ? "1" : "0");
-        //    sb.Append(", ");
-        //}
-
-        //Debug.Log("Grid state: " + sb.ToString());
-        Debug.Log($"Gridstate length: {_gridState.Length:N0}");
-
-        // Place objects representing blocked cells and open paths
-        var placerService = new GridPlacerService(new GridPlacerOptions
-        {
+            },
             parent = parent,
             blockPrefab = blockPrefab,
             pathPrefab = pathPrefab,
+            playerPrefab = playerPrefab,
+            exitPrefab = exitPrefab,
             cellSize = cellSize,
-            rows = gridRows,
-            gridState = _gridState
         });
 
-        placerService.PlaceObjects();
-
-        // Instantiate and place the player prefab
-        var startPos = GridUtils.GetPositionByIndex(startX, startY, cellSize) + new Vector3(cellSize * 0.5f, 1f, cellSize * 0.5f);
-        var playerGo = GameObject.Instantiate(playerPrefab, startPos, Quaternion.identity);
-
-        /// DEBUG STUFF
-        FindObjectOfType<FreeLookCam>().Target = playerGo.transform;
+        _gridState = dungeonLoader.gridState;
+        _floodState = dungeonLoader.floodState;
     }
 
     void OnDrawGizmosSelected()
@@ -103,8 +74,25 @@ public class DebugTestStarter : MonoBehaviour
             var (x, y) = GridUtils.GetCoordinates(i, gridRows);
             var position = GridUtils.GetPositionByCoordinates(x, y, cellSize);
 
-            Gizmos.color = _gridState[i] == GridStateConstants.START ? Color.yellow : _floodState[i] ? Color.blue : (_gridState[i] == GridStateConstants.BLOCKED ? Color.red : Color.green);
+            Gizmos.color = GetGizmoColor(i);
             Gizmos.DrawCube(position, Vector3.one * cellSize);
         }
+    }
+
+    private Color GetGizmoColor(int index)
+    {
+        if (_gridState[index] == GridStateConstants.START)
+            return Color.yellow;
+
+        if (_gridState[index] == GridStateConstants.EXIT)
+            return Color.magenta;
+
+        if (_floodState[index])
+            return Color.green;
+
+        if (_gridState[index] == GridStateConstants.FREE)
+            return Color.gray;
+
+        return Color.red;
     }
 }

@@ -12,7 +12,7 @@ namespace Assets.Core
         private NativeArray<byte> _floodState;
         private NativeArray<byte> _gridState;
 
-        private NativeArray<JobHandle> _jobHandles = new NativeArray<JobHandle>(6, Allocator.TempJob);
+        private NativeArray<JobHandle> _jobHandles = new NativeArray<JobHandle>(10, Allocator.TempJob);
         private JobHandle _jobHandle;
         private Stopwatch _timer;
 
@@ -46,12 +46,16 @@ namespace Assets.Core
             var gridFillerJob = new GridFillerJob(_gridState, _floodState);
             var gridFillerJobHandle = gridFillerJob.Schedule(_gridState.Length, options.innerloopBatchCount, floodFillJob2Handle);
 
+            var gridExitJob = new GridExitJob(_gridState, _floodState, options.gridCols, options.gridRows, options.startIndex);
+            var gridExitJobHandle = gridExitJob.Schedule(gridFillerJobHandle);
+
             _jobHandles[0] = gridBoundsBlockerJobHandle;
             _jobHandles[1] = gridTanBlockerJobHandle;
             _jobHandles[2] = floodFillJobHandle;
             _jobHandles[3] = gridFloodGateJobHandle;
             _jobHandles[4] = floodFillJob2Handle;
             _jobHandles[5] = gridFillerJobHandle;
+            _jobHandles[6] = gridExitJobHandle;
 
             _jobHandle = JobHandle.CombineDependencies(_jobHandles);
         }
