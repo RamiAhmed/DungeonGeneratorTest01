@@ -20,13 +20,9 @@ namespace Assets.Core
 
         public void Execute(int index)
         {
-            var watch = Stopwatch.StartNew();
-
             var (x, y) = GridUtils.GetCoordinates(index, _rows);
             if (GridUtils.HasOutOfBoundsNeighbour(x, y, _rows, _cols))
                 _gridState[index] = GridStateConstants.BLOCKED;
-            
-            UnityEngine.Debug.Log($"{this} took {watch.Elapsed}");
         }
     }
 }
