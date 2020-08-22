@@ -12,10 +12,6 @@ namespace Assets.Core
 {
     public struct GridFillerJob : IJobParallelFor
     {
-        public const byte FREE = 0;
-        public const byte BLOCKED = 1;
-        public const byte FLOODED = byte.MaxValue - 1;
-
         [ReadOnly]
         private readonly NativeArray<byte> _floodState;
 
@@ -29,11 +25,11 @@ namespace Assets.Core
 
         public void Execute(int index)
         {
-            if (_floodState[index] == FLOODED || _gridState[index] != FREE)
+            if (_floodState[index] == GridStateConstants.FLOODED || _gridState[index] != GridStateConstants.FREE)
                 return;
 
             //UnityEngine.Debug.Log($"Blocking cell at index: {index}");
-            _gridState[index] = BLOCKED;
+            _gridState[index] = GridStateConstants.BLOCKED;
         }
     }
 }

@@ -7,10 +7,6 @@ namespace Assets.Core
 {
     public struct GridFloodFillJob : IJob
     {
-        public const byte FREE = 0;
-        public const byte UNSET = byte.MaxValue;
-        public const byte FLOODED = byte.MaxValue - 1;
-
         private readonly int _cols;
         private readonly int _rows;
 
@@ -44,10 +40,10 @@ namespace Assets.Core
         { 
             // we use byte.MaxValue as an 'unset' state value
             for (int i = 0; i < _cellStack.Length; i++)
-                _cellStack[i] = UNSET;
+                _cellStack[i] = GridStateConstants.UNSET;
 
             for (int i = 0; i < _floodState.Length; i++)
-                _floodState[i] = UNSET;
+                _floodState[i] = GridStateConstants.UNSET;
 
             // Add starting cell - must be free
             Push(_rows + 1); // we expect the cell at 1,1 to be free!
@@ -55,27 +51,27 @@ namespace Assets.Core
             do
             {
                 var index = Pop();
-                if (index == UNSET)
+                if (index == GridStateConstants.UNSET)
                     break;
 
-                _floodState[index] = FLOODED;
+                _floodState[index] = GridStateConstants.FLOODED;
 
                 // Left
                 var left = index - 1;
-                if (_gridState[left] == FREE && _floodState[left] != FLOODED)
+                if (_gridState[left] == GridStateConstants.FREE && _floodState[left] != GridStateConstants.FLOODED)
                     Push(left);
 
                 // Right
                 var right = index + 1;
-                if (_gridState[right] == FREE && _floodState[right] != FLOODED)
+                if (_gridState[right] == GridStateConstants.FREE && _floodState[right] != GridStateConstants.FLOODED)
                     Push(right);
 
                 var up = index + _cols;
-                if (_gridState[up] == FREE && _floodState[up] != FLOODED)
+                if (_gridState[up] == GridStateConstants.FREE && _floodState[up] != GridStateConstants.FLOODED)
                     Push(up);
 
                 var down = index - _cols;
-                if (_gridState[down] == FREE && _floodState[down] != FLOODED)
+                if (_gridState[down] == GridStateConstants.FREE && _floodState[down] != GridStateConstants.FLOODED)
                     Push(down);
 
             } while (_stackCount > 0);
@@ -86,7 +82,7 @@ namespace Assets.Core
         {
             for (var i = 0; i < _cellStack.Length; i++)
             {
-                if (_cellStack[i] != UNSET)
+                if (_cellStack[i] != GridStateConstants.UNSET)
                 {
                     continue;
                 }
@@ -104,19 +100,19 @@ namespace Assets.Core
         {
             for (var i = 0; i < _cellStack.Length; i++)
             {
-                if (_cellStack[i] == UNSET)
+                if (_cellStack[i] == GridStateConstants.UNSET)
                 {
                     continue;
                 }
 
                 var result = _cellStack[i];
-                _cellStack[i] = UNSET;
+                _cellStack[i] = GridStateConstants.UNSET;
                 _stackCount -= 1;
 
                 return result;
             }
 
-            return UNSET;
+            return GridStateConstants.UNSET;
         }
     }
 }

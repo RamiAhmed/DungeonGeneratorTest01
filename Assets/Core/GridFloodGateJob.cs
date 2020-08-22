@@ -6,10 +6,6 @@ namespace Assets.Core
 {
     public struct GridFloodGateJob : IJob
     {
-        public const byte FREE = 0;
-        public const byte UNSET = byte.MaxValue;
-        public const byte FLOODED = byte.MaxValue - 1;
-
         private readonly int _cols;
 
         [ReadOnly]
@@ -35,18 +31,18 @@ namespace Assets.Core
         { 
             for (var index = _cols; index < _gridState.Length - _cols; index++)
             {
-                if (_floodState[index] != FLOODED)
+                if (_floodState[index] != GridStateConstants.FLOODED)
                     continue;
 
                 var topLeft = index - 1 + _cols;
                 var topRight = index + 1 + _cols;
 
                 var freeNeighbourIdx = -1;
-                if (_gridState[topLeft] == FREE)
+                if (_gridState[topLeft] == GridStateConstants.FREE)
                 {
                     freeNeighbourIdx = topLeft;
                 }
-                else if (_gridState[topRight] == FREE)
+                else if (_gridState[topRight] == GridStateConstants.FREE)
                 {
                     freeNeighbourIdx = topRight;
                 }
@@ -57,7 +53,7 @@ namespace Assets.Core
                 }
 
                 //UnityEngine.Debug.Log($"index: {index} has {freeNeighbours} free neighbours, delta: {freeNeighbourIdx - index}");
-                _gridState[index + (freeNeighbourIdx - index) + 1] = FREE;
+                _gridState[index + (freeNeighbourIdx - index) + 1] = GridStateConstants.FREE;
             }
         }
     }

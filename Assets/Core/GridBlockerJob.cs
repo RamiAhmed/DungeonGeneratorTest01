@@ -7,9 +7,6 @@ namespace Assets.Core
 {
     public struct GridBlockerJob : IJob
     {
-        public const byte BLOCKED = 1;
-        public const byte FREE = 0;
-
         private readonly int _cols;
         private readonly int _rows;
         private readonly float _sensitivity;
@@ -31,8 +28,8 @@ namespace Assets.Core
             {
                 for (int y = 0; y < _rows; y++)
                 {
-                    var i = (x * _rows) + y;
-                    _gridState[i] = IsCellBlocked(x, y) ? BLOCKED : FREE;
+                    var i = GridUtils.GetIndex(x, y, _rows);
+                    _gridState[i] = IsCellBlocked(x, y) ? GridStateConstants.BLOCKED : GridStateConstants.FREE;
                 }
             }
             UnityEngine.Debug.Log($"{this} took {watch.Elapsed}");
@@ -62,10 +59,10 @@ namespace Assets.Core
                 return false;
             }
 
-            var upIdx = (x * _rows) + up;
-            var downIdx = (x * _rows) + down;
-            var leftIdx = (left * _rows) + y;
-            var rightIdx = (right * _rows) + y;
+            var upIdx = GridUtils.GetIndex(x, up, _rows);
+            var downIdx = GridUtils.GetIndex(x, down, _rows);
+            var leftIdx = GridUtils.GetIndex(left, y, _rows);
+            var rightIdx = GridUtils.GetIndex(right, y, _rows);
 
             //sb.Append($" UP STATE: {(_gridState[upIdx] == BLOCKED ? "BLOCKED" : "FREE")},");
             //sb.Append($" DOWN STATE: {(_gridState[downIdx] == BLOCKED ? "BLOCKED" : "FREE")},");
@@ -73,8 +70,8 @@ namespace Assets.Core
             //sb.Append($" RIGHT STATE: {(_gridState[rightIdx] == BLOCKED ? "BLOCKED" : "FREE")}");
             //Debug.Log(sb.ToString());
 
-            if ((_gridState[upIdx] == FREE && _gridState[downIdx] == FREE) &&
-                (_gridState[rightIdx] == FREE || _gridState[leftIdx] == FREE))
+            if ((_gridState[upIdx] == GridStateConstants.FREE && _gridState[downIdx] == GridStateConstants.FREE) &&
+                (_gridState[rightIdx] == GridStateConstants.FREE || _gridState[leftIdx] == GridStateConstants.FREE))
             {
                 return true;
             }

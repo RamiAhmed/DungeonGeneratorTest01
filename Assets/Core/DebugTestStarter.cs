@@ -37,7 +37,7 @@ public class DebugTestStarter : MonoBehaviour
                 .ToArray();
 
             _floodState = floodState
-                .Select(s => s == GridFloodFillJob.FLOODED)
+                .Select(s => s == GridStateConstants.FLOODED)
                 .ToArray();
         }
 
@@ -59,8 +59,7 @@ public class DebugTestStarter : MonoBehaviour
 
         for (int i = 0; i < _gridState.Length; i++)
         {
-            var x = (i * cellSize) % gridCols;
-            var y = (i * cellSize) / gridRows;
+            var (x, y) = GridUtils.GetCoordinates(i, gridRows, gridCols, cellSize);
 
             Gizmos.color = x == 1 && y == 1 ? Color.yellow : _floodState[i] ? Color.blue : (_gridState[i] ? Color.red : Color.green);
             Gizmos.DrawCube(new Vector3(x, 0, y), Vector3.one * cellSize);
