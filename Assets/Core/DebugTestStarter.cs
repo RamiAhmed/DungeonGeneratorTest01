@@ -1,5 +1,6 @@
 ﻿using Assets.Core;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 
 public class DebugTestStarter : MonoBehaviour
@@ -19,6 +20,8 @@ public class DebugTestStarter : MonoBehaviour
     [Range(1, 20)]
     public int innerloopBatchCount = 1;
 
+    public Allocator allocatorType = Allocator.TempJob;
+
     private bool[] _gridState;
     private bool[] _floodState;
 
@@ -32,7 +35,8 @@ public class DebugTestStarter : MonoBehaviour
                 gridRows = gridRows,
                 gridCols = gridCols,
                 sensitivity = sensitivity,
-                innerloopBatchCount = innerloopBatchCount
+                innerloopBatchCount = innerloopBatchCount,
+                allocatorType = allocatorType
             });
 
             var (gridState, floodState) = service.Complete();

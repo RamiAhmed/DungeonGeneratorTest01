@@ -20,9 +20,9 @@ namespace Assets.Core
             _timer = Stopwatch.StartNew();
 
             var count = options.gridRows * options.gridCols;
-            _gridState = new NativeArray<byte>(count, Allocator.TempJob);
-            _cellStack = new NativeArray<int>(count, Allocator.TempJob);
-            _floodState = new NativeArray<byte>(count, Allocator.TempJob);
+            _gridState = new NativeArray<byte>(count, options.allocatorType);
+            _cellStack = new NativeArray<int>(count, options.allocatorType);
+            _floodState = new NativeArray<byte>(count, options.allocatorType);
 
             var gridBoundsBlockerJob = new GridBoundsBlockerJob(_gridState, options.gridCols, options.gridRows);
             var gridBoundsBlockerJobHandle = gridBoundsBlockerJob.Schedule(_gridState.Length, options.innerloopBatchCount);
@@ -74,5 +74,6 @@ namespace Assets.Core
         public int gridCols;
         public float sensitivity;
         public int innerloopBatchCount;
+        public Allocator allocatorType;
     }
 }
