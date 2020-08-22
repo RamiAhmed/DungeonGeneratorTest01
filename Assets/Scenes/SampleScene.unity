@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridRows: 250
   gridCols: 250
-  sensitivity: 0.1
+  sensitivity: 0.35
   cellSize: 2
 --- !u!4 &345831418
 Transform:
