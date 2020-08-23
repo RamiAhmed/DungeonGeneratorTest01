@@ -6,7 +6,7 @@ using Unity.Jobs;
 
 namespace Assets.Core
 {
-    public class DungeonGeneratorService : IDisposable
+    public class GridGeneratorService : IDisposable
     {
         private NativeArray<int> _cellStack;
         private NativeArray<byte> _floodState;
@@ -16,7 +16,7 @@ namespace Assets.Core
         private JobHandle _jobHandle;
         private Stopwatch _timer;
 
-        public void Generate(DungeonGeneratorOptions options)
+        public void Generate(GridGeneratorOptions options)
         {
             _timer = Stopwatch.StartNew();
 
@@ -76,7 +76,8 @@ namespace Assets.Core
         }
     }
 
-    public class DungeonGeneratorOptions
+    [Serializable]
+    public class GridGeneratorOptions
     {
         public int gridRows;
         public int gridCols;
@@ -84,5 +85,10 @@ namespace Assets.Core
         public int innerloopBatchCount;
         public Allocator allocatorType;
         public int startIndex;
+
+        public override string ToString()
+        {
+            return UnityEngine.JsonUtility.ToJson(this);
+        }
     }
 }

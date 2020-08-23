@@ -1,7 +1,7 @@
 ﻿using Assets.Core.Grid;
+using System;
 using System.Linq;
 using UnityEngine;
-using UnityStandardAssets.Cameras;
 
 namespace Assets.Core
 {
@@ -13,18 +13,38 @@ namespace Assets.Core
 
         public bool[] floodState { get; private set; }
 
+        private GameObject _player;
+
         public void Generate(DungeonOptions options)
         {
             _options = options;
+            UnityEngine.Debug.Log($"Loading dungeon with options: {options}");
 
+            ResetPreviousPlayer();
+            ResetPreviousDungeon();
             CreateGrid();
             PlaceObjects();
             CreatePlayer();
         }
 
+        private void ResetPreviousPlayer()
+        {
+            var resetService = new PlayerResetService();
+            resetService.ResetPlayer(_player);
+        }
+
+        private void ResetPreviousDungeon()
+        {
+            var resetService = new DungeonResetService();
+            resetService.DestroyDungeon(new DungeonResetOptions
+            {
+                parent = _options?.parent,
+            });
+        }
+
         private void CreateGrid()
         {
-            using (var service = new DungeonGeneratorService())
+            using (var service = new GridGeneratorService())
             {
                 service.Generate(_options.generatorOptions);
 
@@ -57,20 +77,21 @@ namespace Assets.Core
 
         private void CreatePlayer()
         {
-            // Instantiate and place the player prefab
-            var (startX, startY) = GridUtils.GetCoordinates(_options.generatorOptions.startIndex, _options.generatorOptions.gridRows);
-            var startPos = GridUtils.GetPositionByIndex(startX, startY, _options.cellSize) +
-                new Vector3(_options.cellSize * 0.5f, 1f, _options.cellSize * 0.5f);
-            var playerGo = GameObject.Instantiate(_options.playerPrefab, startPos, Quaternion.identity);
-
-            /// DEBUG STUFF
-            GameObject.FindObjectOfType<FreeLookCam>().Target = playerGo.transform;
+            var playerCreationService = new PlayerCreationService();
+            _player = playerCreationService.CreatePlayer(new PlayerCreationOptions
+            {
+                playerPrefab = _options.playerPrefab,
+                cellSize = _options.cellSize,
+                gridRows = _options.generatorOptions.gridRows,
+                startIndex = _options.generatorOptions.startIndex
+            });
         }
     }
 
+    [Serializable]
     public class DungeonOptions
     {
-        public DungeonGeneratorOptions generatorOptions;
+        public GridGeneratorOptions generatorOptions;
 
         public Transform parent;
 
@@ -80,5 +101,10 @@ namespace Assets.Core
         public GameObject exitPrefab;
 
         public int cellSize;
+
+        public override string ToString()
+        {
+            return JsonUtility.ToJson(this);
+        }
     }
 }

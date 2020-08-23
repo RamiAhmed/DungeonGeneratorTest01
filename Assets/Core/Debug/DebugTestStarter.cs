@@ -1,6 +1,5 @@
 ﻿using Assets.Core;
 using Assets.Core.Grid;
-using System;
 using Unity.Collections;
 using UnityEngine;
 
@@ -52,13 +51,19 @@ public class DebugTestStarter : MonoBehaviour
         CreateDungeon();
     }
 
+    public static void CreateDungeonTest()
+    {
+        var obj = FindObjectOfType<DebugTestStarter>();
+        obj.CreateDungeon();
+    }
+
     public void CreateDungeon()
     {
-        this.gridRows = UnityEngine.Random.Range(this.gridRows - gridRowsRandom, this.gridRows + gridRowsRandom);
-        this.gridCols = UnityEngine.Random.Range(this.gridCols - gridColsRandom, this.gridCols + gridColsRandom);
+        this.gridRows = Random.Range(this.gridRows - gridRowsRandom, this.gridRows + gridRowsRandom);
+        this.gridCols = Random.Range(this.gridCols - gridColsRandom, this.gridCols + gridColsRandom);
         _dungeonLoader.Generate(new DungeonOptions
         {
-            generatorOptions = new DungeonGeneratorOptions
+            generatorOptions = new GridGeneratorOptions
             {
                 gridRows = gridRows,
                 gridCols = gridCols,

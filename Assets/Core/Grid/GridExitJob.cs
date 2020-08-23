@@ -45,6 +45,9 @@ namespace Assets.Core.Grid
                 }
             }
 
+            if (bestIndex == -1)
+                throw new IndexOutOfRangeException();
+
             _gridState[bestIndex] = GridStateConstants.EXIT;
         }
     }
