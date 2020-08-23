@@ -20,6 +20,9 @@ namespace Assets.Core.Grid
 
         public void Execute(int index)
         {
+            if (_gridState[index] == GridStateConstants.START)
+                return;
+
             var (x, y) = GridUtils.GetCoordinates(index, _rows);
             var up = y + 1;
             var down = y - 1;

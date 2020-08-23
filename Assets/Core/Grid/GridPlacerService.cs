@@ -33,10 +33,10 @@ namespace Assets.Core.Grid
             if (_options.gridState[index] == GridStateConstants.EXIT)
                 return _options.exitPrefab;
 
-            if (_options.gridState[index] == GridStateConstants.FREE)
-                return _options.pathPrefab;
-
-            return _options.blockPrefab;
+            if (_options.gridState[index] == GridStateConstants.BLOCKED)
+                return _options.blockPrefab;
+                
+            return _options.pathPrefab;
         }
     }
 

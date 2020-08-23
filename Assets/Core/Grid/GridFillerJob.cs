@@ -18,7 +18,7 @@ namespace Assets.Core.Grid
 
         public void Execute(int index)
         {
-            if (_floodState[index] == GridStateConstants.FLOODED || _gridState[index] != GridStateConstants.FREE)
+            if (_floodState[index] == GridStateConstants.FLOODED || _gridState[index] != GridStateConstants.FREE || _gridState[index] == GridStateConstants.START)
                 return;
 
             //UnityEngine.Debug.Log($"Blocking cell at index: {index}");

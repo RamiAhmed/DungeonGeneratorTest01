@@ -7,15 +7,26 @@ namespace Assets.Core
 {
     public class DungeonLoaderService
     {
+        private DungeonOptions _options;
+
         public byte[] gridState { get; private set; }
 
         public bool[] floodState { get; private set; }
 
         public void Generate(DungeonOptions options)
         {
+            _options = options;
+
+            CreateGrid();
+            PlaceObjects();
+            CreatePlayer();
+        }
+
+        private void CreateGrid()
+        {
             using (var service = new DungeonGeneratorService())
             {
-                service.Generate(options.generatorOptions);
+                service.Generate(_options.generatorOptions);
 
                 var (gridState, floodState) = service.Complete();
                 this.gridState = gridState
@@ -25,28 +36,32 @@ namespace Assets.Core
                     .Select(s => s == GridStateConstants.FLOODED)
                     .ToArray();
             }
+        }
 
-            Debug.Log($"Gridstate length: {gridState.Length:N0}");
-
+        private void PlaceObjects()
+        {
             // Place objects representing blocked cells and open paths
             var placerService = new GridPlacerService(new GridPlacerOptions
             {
-                parent = options.parent,
-                blockPrefab = options.blockPrefab,
-                pathPrefab = options.pathPrefab,
-                exitPrefab = options.exitPrefab,
-                cellSize = options.cellSize,
-                rows = options.generatorOptions.gridRows,
+                parent = _options.parent,
+                blockPrefab = _options.blockPrefab,
+                pathPrefab = _options.pathPrefab,
+                exitPrefab = _options.exitPrefab,
+                cellSize = _options.cellSize,
+                rows = _options.generatorOptions.gridRows,
                 gridState = gridState
             });
 
             placerService.PlaceObjects();
+        }
 
+        private void CreatePlayer()
+        {
             // Instantiate and place the player prefab
-            var (startX, startY) = GridUtils.GetCoordinates(options.generatorOptions.startIndex, options.generatorOptions.gridRows);
-            var startPos = GridUtils.GetPositionByIndex(startX, startY, options.cellSize) + 
-                new Vector3(options.cellSize * 0.5f, 1f, options.cellSize * 0.5f);
-            var playerGo = GameObject.Instantiate(options.playerPrefab, startPos, Quaternion.identity);
+            var (startX, startY) = GridUtils.GetCoordinates(_options.generatorOptions.startIndex, _options.generatorOptions.gridRows);
+            var startPos = GridUtils.GetPositionByIndex(startX, startY, _options.cellSize) +
+                new Vector3(_options.cellSize * 0.5f, 1f, _options.cellSize * 0.5f);
+            var playerGo = GameObject.Instantiate(_options.playerPrefab, startPos, Quaternion.identity);
 
             /// DEBUG STUFF
             GameObject.FindObjectOfType<FreeLookCam>().Target = playerGo.transform;

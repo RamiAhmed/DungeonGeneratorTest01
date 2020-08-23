@@ -1,5 +1,6 @@
 ﻿using Assets.Core;
 using Assets.Core.Grid;
+using System;
 using Unity.Collections;
 using UnityEngine;
 
@@ -16,8 +17,12 @@ public class DebugTestStarter : MonoBehaviour
     [Range(0, 100000)]
     public int gridRows = 100;
 
+    public int gridRowsRandom = 50;
+
     [Range(0, 100000)]
     public int gridCols = 100;
+
+    public int gridColsRandom = 50;
 
     [Range(-0.9f, 0.9f)]
     public float sensitivity = 0.3f;
@@ -34,14 +39,24 @@ public class DebugTestStarter : MonoBehaviour
 
     public Allocator allocatorType = Allocator.TempJob;
 
+    //public event Action CreateDungeonEvent; 
+
     private byte[] _gridState;
     private bool[] _floodState;
+
+    private readonly DungeonLoaderService _dungeonLoader = new DungeonLoaderService();
 
     // Start is called before the first frame update
     void Start()
     {
-        var dungeonLoader = new DungeonLoaderService();
-        dungeonLoader.Generate(new DungeonOptions
+        CreateDungeon();
+    }
+
+    public void CreateDungeon()
+    {
+        this.gridRows = UnityEngine.Random.Range(this.gridRows - gridRowsRandom, this.gridRows + gridRowsRandom);
+        this.gridCols = UnityEngine.Random.Range(this.gridCols - gridColsRandom, this.gridCols + gridColsRandom);
+        _dungeonLoader.Generate(new DungeonOptions
         {
             generatorOptions = new DungeonGeneratorOptions
             {
@@ -60,8 +75,8 @@ public class DebugTestStarter : MonoBehaviour
             cellSize = cellSize,
         });
 
-        _gridState = dungeonLoader.gridState;
-        _floodState = dungeonLoader.floodState;
+        _gridState = _dungeonLoader.gridState;
+        _floodState = _dungeonLoader.floodState;
     }
 
     void OnDrawGizmosSelected()
