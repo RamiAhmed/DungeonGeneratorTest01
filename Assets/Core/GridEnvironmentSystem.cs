@@ -1,11 +1,7 @@
 ﻿using Assets.Core.Grid;
 using System.Linq;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
-using Unity.Transforms;
-using UnityEngine;
 
 namespace Assets.Core
 {
@@ -13,11 +9,11 @@ namespace Assets.Core
     public class GridEnvironmentSystem : SystemBase
     {
         private BeginInitializationEntityCommandBufferSystem _entityCommandBufferSystem;
+        private GridEnvironmentPlacerService _gridPlacerService;
 
         protected override void OnCreate()
         {
             UnityEngine.Debug.Log($"{this}: OnCreate");
-            _options = DebugTestStarter.GetOptions().GetGridPlacerOptions();
             _entityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
         }
 
@@ -43,11 +39,11 @@ namespace Assets.Core
         private void CreateGridCellEntities(NativeArray<byte> gridState)
         {
             var commandBuffer = _entityCommandBufferSystem.CreateCommandBuffer();
-            var gridPlacerService = new GridEnvironmentPlacerService(
+            _gridPlacerService = new GridEnvironmentPlacerService(
                 DebugTestStarter.GetOptions().GetGridPlacerOptions(), // TODO: Get options in proper way
                 gridState,
                 commandBuffer);
-            gridPlacerService.Execute();
+            _gridPlacerService.Execute();
 
             _entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
@@ -60,6 +56,7 @@ namespace Assets.Core
 
         protected override void OnDestroy()
         {
+            _gridPlacerService?.Dispose();
         }
     }
 }

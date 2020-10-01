@@ -1,12 +1,12 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System;
+using System.Diagnostics;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 
 namespace Assets.Core.Grid
 {
-    public class GridEnvironmentPlacerService
+    public class GridEnvironmentPlacerService : IDisposable
     {
         private NativeArray<byte> _gridState;
         private EntityCommandBuffer _commandBuffer;
@@ -14,6 +14,7 @@ namespace Assets.Core.Grid
         private readonly GridPlacerOptions _options;
 
         private Entity[] _prefabs;
+        private BlobAssetStore _blobAssetStore;
 
         public GridEnvironmentPlacerService(GridPlacerOptions options, NativeArray<byte> gridState, EntityCommandBuffer commandBuffer)
         {
@@ -95,7 +96,8 @@ namespace Assets.Core.Grid
 
         private void PreparePrefabs()
         {
-            var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
+            _blobAssetStore = new BlobAssetStore();
+            var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, _blobAssetStore);
 
             _prefabs = new[]
             {
@@ -114,6 +116,11 @@ namespace Assets.Core.Grid
                 return _prefabs[1];
 
             return _prefabs[2];
+        }
+
+        public void Dispose()
+        {
+            _blobAssetStore?.Dispose();
         }
     }
 }
