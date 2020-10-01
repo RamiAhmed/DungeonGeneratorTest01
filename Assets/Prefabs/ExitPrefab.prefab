@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3794063968824843121}
   - component: {fileID: 5284595829983115846}
   - component: {fileID: 451949309560472682}
-  - component: {fileID: 2368264184653812688}
+  - component: {fileID: 2254908879736492585}
   m_Layer: 0
   m_Name: ExitPrefab
   m_TagString: Untagged
@@ -96,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2368264184653812688
+--- !u!114 &2254908879736492585
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,6 +105,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6699562329660867092}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdc77db29101cd049b38e653a0ecfebf, type: 3}
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConversionMode: 0

@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 345831418}
   - component: {fileID: 345831417}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: DebugTestStarter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -158,9 +158,11 @@ MonoBehaviour:
   playerPrefab: {fileID: 149790, guid: 7737647c22c1fc64a88d5cd030c352ce, type: 3}
   exitPrefab: {fileID: 6699562329660867092, guid: 21a0e421a1aa33d4d98a298bf0e20f78, type: 3}
   gridRows: 40
+  gridRowsRandom: 50
   gridCols: 20
+  gridColsRandom: 50
   sensitivity: 0.2
-  cellSize: 2
+  cellSize: 1
   startX: 1
   startY: 1
   innerloopBatchCount: 2
@@ -255,6 +257,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &705507995
@@ -460,7 +463,7 @@ LightingSettings:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Settings.lighting
-  serializedVersion: 2
+  serializedVersion: 3
   m_GIWorkflowMode: 1
   m_EnableBakedLightmaps: 1
   m_EnableRealtimeLightmaps: 0
@@ -482,7 +485,7 @@ LightingSettings:
   m_MixedBakeMode: 2
   m_LightmapsBakeMode: 1
   m_FilterMode: 1
-  m_LightmapParameters: {fileID: 0}
+  m_LightmapParameters: {fileID: 15204, guid: 0000000000000000f000000000000000, type: 0}
   m_ExportTrainingData: 0
   m_TrainingDataDestination: TrainingData
   m_RealtimeResolution: 2
@@ -499,7 +502,7 @@ LightingSettings:
   m_PVREnvironmentReferencePointCount: 2048
   m_LightProbeSampleCountMultiplier: 4
   m_PVRBounces: 2
-  m_PVRRussianRouletteStartBounce: 2
+  m_PVRMinBounces: 1
   m_PVREnvironmentMIS: 0
   m_PVRFilteringMode: 2
   m_PVRDenoiserTypeDirect: 0

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Unity.Collections;
 using Unity.Jobs;
 
@@ -13,6 +14,7 @@ namespace Assets.Core.Grid
         [ReadOnly]
         private readonly NativeArray<byte> _floodState;
 
+        [WriteOnly]
         private NativeArray<byte> _gridState;
 
         public GridExitJob(NativeArray<byte> gridState, NativeArray<byte> floodState, int gridCols, int gridRows, int startIndex)
@@ -26,6 +28,7 @@ namespace Assets.Core.Grid
 
         public void Execute()
         {
+            var watch = Stopwatch.StartNew();
             var (startX, startY) = GridUtils.GetCoordinates(_startIndex, _gridRows);
             int bestDelta = 0, bestIndex = -1;
             for (int x = 1; x < _gridCols - 1; x++)
@@ -49,6 +52,7 @@ namespace Assets.Core.Grid
                 throw new IndexOutOfRangeException();
 
             _gridState[bestIndex] = GridStateConstants.EXIT;
+            UnityEngine.Debug.Log($"{this} took {watch.Elapsed}");
         }
     }
 }

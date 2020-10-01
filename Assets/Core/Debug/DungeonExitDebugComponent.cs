@@ -13,7 +13,7 @@ namespace Assets.Core.Debug
                 return;
 
             enabled = false;
-            DebugTestStarter.CreateDungeonTest();
+            //DebugTestStarter.CreateDungeonTest();
         }
     }
 }

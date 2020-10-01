@@ -1,17 +1,17 @@
-﻿using UnityEngine;
+﻿//using UnityEngine;
 
-namespace Assets.Core
-{
-    public class PlayerResetService
-    {
-        public void ResetPlayer(GameObject player)
-        {
-            if (player?.gameObject == null)
-            {
-                return;
-            }
+//namespace Assets.Core
+//{
+//    public class PlayerResetService
+//    {
+//        public void ResetPlayer(GameObject player)
+//        {
+//            if (player?.gameObject == null)
+//            {
+//                return;
+//            }
 
-            GameObject.Destroy(player.gameObject);
-        }
-    }
-}
+//            GameObject.Destroy(player.gameObject);
+//        }
+//    }
+//}

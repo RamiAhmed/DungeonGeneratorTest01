@@ -43,46 +43,72 @@ public class DebugTestStarter : MonoBehaviour
     private byte[] _gridState;
     private bool[] _floodState;
 
-    private readonly DungeonLoaderService _dungeonLoader = new DungeonLoaderService();
+    //private readonly DungeonLoaderService _dungeonLoader = new DungeonLoaderService();
 
     // Start is called before the first frame update
-    void Start()
-    {
-        CreateDungeon();
-    }
+    //void Start()
+    //{
+    //    CreateDungeon();
+    //}
 
-    public static void CreateDungeonTest()
-    {
-        var obj = FindObjectOfType<DebugTestStarter>();
-        obj.CreateDungeon();
-    }
+    //public static void CreateDungeonTest()
+    //{
+    //    var obj = FindObjectOfType<DebugTestStarter>();
+    //    obj.CreateDungeon();
+    //}
 
-    public void CreateDungeon()
+    public static DungeonOptions GetOptions()
     {
-        this.gridRows = Random.Range(this.gridRows - gridRowsRandom, this.gridRows + gridRowsRandom);
-        this.gridCols = Random.Range(this.gridCols - gridColsRandom, this.gridCols + gridColsRandom);
-        _dungeonLoader.Generate(new DungeonOptions
+        var instance = FindObjectOfType<DebugTestStarter>();
+        if (instance == null)
+            throw new System.Exception();
+
+        return new DungeonOptions
         {
             generatorOptions = new GridGeneratorOptions
             {
-                gridRows = gridRows,
-                gridCols = gridCols,
-                sensitivity = sensitivity,
-                innerloopBatchCount = innerloopBatchCount,
-                allocatorType = allocatorType,
-                startIndex = GridUtils.GetIndex(startX, startY, gridRows)
+                gridRows = instance.gridRows,
+                gridCols = instance.gridCols,
+                sensitivity = instance.sensitivity,
+                innerloopBatchCount = instance.innerloopBatchCount,
+                allocatorType = instance.allocatorType,
+                startIndex = GridUtils.GetIndex(instance.startX, instance.startY, instance.gridRows)
             },
-            parent = parent,
-            blockPrefab = blockPrefab,
-            pathPrefab = pathPrefab,
-            playerPrefab = playerPrefab,
-            exitPrefab = exitPrefab,
-            cellSize = cellSize,
-        });
-
-        _gridState = _dungeonLoader.gridState;
-        _floodState = _dungeonLoader.floodState;
+            parent = instance.parent,
+            blockPrefab = instance.blockPrefab,
+            pathPrefab = instance.pathPrefab,
+            playerPrefab = instance.playerPrefab,
+            exitPrefab = instance.exitPrefab,
+            cellSize = instance.cellSize,
+        };
     }
+
+    //public void CreateDungeon()
+    //{
+    //    this.gridRows = Random.Range(this.gridRows - gridRowsRandom, this.gridRows + gridRowsRandom);
+    //    this.gridCols = Random.Range(this.gridCols - gridColsRandom, this.gridCols + gridColsRandom);
+    //    _dungeonLoader.Generate(new DungeonOptions
+    //    {
+    //        generatorOptions = new GridGeneratorOptions
+    //        {
+    //            gridRows = gridRows,
+    //            gridCols = gridCols,
+    //            sensitivity = sensitivity,
+    //            innerloopBatchCount = innerloopBatchCount,
+    //            allocatorType = allocatorType,
+    //            startIndex = GridUtils.GetIndex(startX, startY, gridRows)
+    //        },
+    //        parent = parent,
+    //        blockPrefab = blockPrefab,
+    //        pathPrefab = pathPrefab,
+    //        playerPrefab = playerPrefab,
+    //        exitPrefab = exitPrefab,
+    //        cellSize = cellSize,
+    //    });
+
+    //    _gridState = _dungeonLoader.gridState;
+    //    _floodState = _dungeonLoader.floodState;
+    //}
 
     void OnDrawGizmosSelected()
     {
