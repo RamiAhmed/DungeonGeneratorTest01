@@ -13,9 +13,6 @@ namespace Assets.Core
     public class GridEnvironmentSystem : SystemBase
     {
         private BeginInitializationEntityCommandBufferSystem _entityCommandBufferSystem;
-        private GridPlacerOptions _options;
-
-        private NativeArray<byte> _gridState;
 
         protected override void OnCreate()
         {
@@ -28,26 +25,27 @@ namespace Assets.Core
         {
             UnityEngine.Debug.Log($"{this}: OnStartRunning");
 
-            SetGridState();
-            CreateGridCellEntities();
+            var gridState = GetGridState();
+            CreateGridCellEntities(gridState);
         }
 
-        private void SetGridState()
+        private NativeArray<byte> GetGridState()
         {
             var gridEntityQuery = GetEntityQuery(ComponentType.ReadOnly<GridSharedSystemComponentData>());
             var entities = gridEntityQuery.ToEntityArray(Allocator.TempJob);
+
             var gridData = EntityManager.GetSharedComponentData<GridSharedSystemComponentData>(entities.Single());
-            _gridState = gridData.GridState;
+
             entities.Dispose();
-            UnityEngine.Debug.Log($"{this} got gridState: {_gridState.Length}");
+            return gridData.GridState;
         }
 
-        private void CreateGridCellEntities()
+        private void CreateGridCellEntities(NativeArray<byte> gridState)
         {
             var commandBuffer = _entityCommandBufferSystem.CreateCommandBuffer();
             var gridPlacerService = new GridEnvironmentPlacerService(
-                DebugTestStarter.GetOptions().GetGridPlacerOptions(),
-                _gridState,
+                DebugTestStarter.GetOptions().GetGridPlacerOptions(), // TODO: Get options in proper way
+                gridState,
                 commandBuffer);
             gridPlacerService.Execute();
 
