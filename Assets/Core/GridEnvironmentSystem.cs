@@ -1,12 +1,11 @@
 ﻿using Assets.Core.Grid;
-using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
 
 namespace Assets.Core
 {
     [UpdateAfter(typeof(GridGeneratorSystem))]
-    public class GridEnvironmentSystem : SystemBase
+    public class GridEnvironmentSystem : BaseGridDependentSystem
     {
         private BeginInitializationEntityCommandBufferSystem _entityCommandBufferSystem;
         private GridEnvironmentPlacerService _gridPlacerService;
@@ -25,16 +24,6 @@ namespace Assets.Core
             CreateGridCellEntities(gridState);
         }
 
-        private NativeArray<byte> GetGridState()
-        {
-            var gridEntityQuery = GetEntityQuery(ComponentType.ReadOnly<GridSharedSystemComponentData>());
-            using var entities = gridEntityQuery.ToEntityArray(Allocator.TempJob);
-
-            var gridData = EntityManager.GetSharedComponentData<GridSharedSystemComponentData>(entities.Single());
-
-            return gridData.GridState;
-        }
-
         private void CreateGridCellEntities(NativeArray<byte> gridState)
         {
             var commandBuffer = _entityCommandBufferSystem.CreateCommandBuffer();
@@ -49,8 +38,7 @@ namespace Assets.Core
 
         protected override void OnUpdate()
         {
-            //UnityEngine.Debug.Log($"{this}: OnUpdate");
-
+            /* NOOP */
         }
 
         protected override void OnDestroy()

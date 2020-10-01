@@ -16,6 +16,8 @@ namespace Assets.Core
         public GameObject playerPrefab;
         public GameObject exitPrefab;
 
+        public GameObject cameraPrefab;
+
         public int cellSize;
 
         public GridPlacerOptions GetGridPlacerOptions()

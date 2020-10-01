@@ -11,6 +11,7 @@ public class DebugTestStarter : MonoBehaviour
     public GameObject pathPrefab;
     public GameObject playerPrefab;
     public GameObject exitPrefab;
+    public GameObject camPrefab;
 
     [Header("Grid")]
     [Range(0, 100000)]
@@ -40,8 +41,8 @@ public class DebugTestStarter : MonoBehaviour
 
     //public event Action CreateDungeonEvent; 
 
-    private byte[] _gridState;
-    private bool[] _floodState;
+    //private byte[] _gridState;
+    //private bool[] _floodState;
 
     //private readonly DungeonLoaderService _dungeonLoader = new DungeonLoaderService();
 
@@ -80,6 +81,7 @@ public class DebugTestStarter : MonoBehaviour
             playerPrefab = instance.playerPrefab,
             exitPrefab = instance.exitPrefab,
             cellSize = instance.cellSize,
+            cameraPrefab = instance.camPrefab
         };
     }
 
@@ -110,35 +112,35 @@ public class DebugTestStarter : MonoBehaviour
     //    _floodState = _dungeonLoader.floodState;
     //}
 
-    void OnDrawGizmosSelected()
-    {
-        if (_gridState == null)
-            return;
+    //void OnDrawGizmosSelected()
+    //{
+    //    if (_gridState == null)
+    //        return;
 
-        for (int i = 0; i < _gridState.Length; i++)
-        {
-            var (x, y) = GridUtils.GetCoordinates(i, gridRows);
-            var position = GridUtils.GetPositionByCoordinates(x, y, cellSize);
+    //    for (int i = 0; i < _gridState.Length; i++)
+    //    {
+    //        var (x, y) = GridUtils.GetCoordinates(i, gridRows);
+    //        var position = GridUtils.GetPositionByCoordinates(x, y, cellSize);
 
-            Gizmos.color = GetGizmoColor(i);
-            Gizmos.DrawCube(position, Vector3.one * cellSize);
-        }
-    }
+    //        Gizmos.color = GetGizmoColor(i);
+    //        Gizmos.DrawCube(position, Vector3.one * cellSize);
+    //    }
+    //}
 
-    private Color GetGizmoColor(int index)
-    {
-        if (_gridState[index] == GridStateConstants.START)
-            return Color.yellow;
+    //private Color GetGizmoColor(int index)
+    //{
+    //    if (_gridState[index] == GridStateConstants.START)
+    //        return Color.yellow;
 
-        if (_gridState[index] == GridStateConstants.EXIT)
-            return Color.magenta;
+    //    if (_gridState[index] == GridStateConstants.EXIT)
+    //        return Color.magenta;
 
-        if (_floodState[index])
-            return Color.green;
+    //    if (_floodState[index])
+    //        return Color.green;
 
-        if (_gridState[index] == GridStateConstants.FREE)
-            return Color.gray;
+    //    if (_gridState[index] == GridStateConstants.FREE)
+    //        return Color.gray;
 
-        return Color.red;
-    }
+    //    return Color.red;
+    //}
 }

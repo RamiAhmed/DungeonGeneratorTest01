@@ -101,6 +101,7 @@ namespace Assets.Core
 
         protected override void OnUpdate()
         {
+            /* NOOP */
         }
 
         protected override void OnDestroy()
