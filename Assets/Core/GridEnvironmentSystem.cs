@@ -28,11 +28,10 @@ namespace Assets.Core
         private NativeArray<byte> GetGridState()
         {
             var gridEntityQuery = GetEntityQuery(ComponentType.ReadOnly<GridSharedSystemComponentData>());
-            var entities = gridEntityQuery.ToEntityArray(Allocator.TempJob);
+            using var entities = gridEntityQuery.ToEntityArray(Allocator.TempJob);
 
             var gridData = EntityManager.GetSharedComponentData<GridSharedSystemComponentData>(entities.Single());
 
-            entities.Dispose();
             return gridData.GridState;
         }
 

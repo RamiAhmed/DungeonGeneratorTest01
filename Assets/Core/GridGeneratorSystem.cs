@@ -10,7 +10,6 @@ namespace Assets.Core
         private NativeArray<int> _cellStack;
         private NativeArray<byte> _floodState;
         private NativeArray<byte> _gridState;
-        private EntityCommandBuffer _commandBuffer;
 
         private NativeArray<JobHandle> _jobHandles = new NativeArray<JobHandle>(10, Allocator.TempJob);
         private JobHandle _jobHandle;
@@ -24,7 +23,7 @@ namespace Assets.Core
 
             var options = dungeonOptions.generatorOptions;
             var count = options.gridRows * options.gridCols;
-            _gridState = new NativeArray<byte>(count, options.allocatorType);
+            _gridState = new NativeArray<byte>(count, Allocator.Persistent);
             _cellStack = new NativeArray<int>(count, options.allocatorType);
             _floodState = new NativeArray<byte>(count, options.allocatorType);
 
@@ -94,6 +93,10 @@ namespace Assets.Core
         protected override void OnStartRunning()
         {
             Complete();
+
+            _jobHandles.Dispose();
+            _floodState.Dispose();
+            _cellStack.Dispose();
         }
 
         protected override void OnUpdate()
@@ -102,10 +105,7 @@ namespace Assets.Core
 
         protected override void OnDestroy()
         {
-            _jobHandles.Dispose();
             _gridState.Dispose();
-            _floodState.Dispose();
-            _cellStack.Dispose();
         }
     }
 }
