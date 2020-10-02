@@ -39,6 +39,11 @@ public class DebugTestStarter : MonoBehaviour
 
     public Allocator allocatorType = Allocator.TempJob;
 
+    [Header("Camera")]
+    public float cameraOffset = 10f;
+
+    public float cameraSmoothSpeed = 0.25f;
+
     //public event Action CreateDungeonEvent; 
 
     //private byte[] _gridState;
@@ -81,7 +86,9 @@ public class DebugTestStarter : MonoBehaviour
             playerPrefab = instance.playerPrefab,
             exitPrefab = instance.exitPrefab,
             cellSize = instance.cellSize,
-            cameraPrefab = instance.camPrefab
+            cameraPrefab = instance.camPrefab,
+            cameraOffset = instance.cameraOffset,
+            cameraSmoothSpeed = instance.cameraSmoothSpeed
         };
     }
 

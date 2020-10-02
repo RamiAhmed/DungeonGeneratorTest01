@@ -19,6 +19,8 @@ namespace Assets.Core
         public GameObject cameraPrefab;
 
         public int cellSize;
+        public float cameraSmoothSpeed;
+        public float cameraOffset;
 
         public GridPlacerOptions GetGridPlacerOptions()
         {

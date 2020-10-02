@@ -1,14 +1,15 @@
 ﻿using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Transforms;
 
 namespace Assets.Core.Player
 {
     public abstract class BasePlayerDependentSystem : SystemBase
     {
-        private Entity _player;
+        private Entity _localPlayer;
 
-        protected Entity LocalPlayer => _player == Entity.Null ? (_player = GetPlayerEntity(1)) : _player;
+        protected Entity LocalPlayer => _localPlayer == Entity.Null ? (_localPlayer = GetPlayerEntity(1)) : _localPlayer;
 
         protected override void OnCreate()
         {
