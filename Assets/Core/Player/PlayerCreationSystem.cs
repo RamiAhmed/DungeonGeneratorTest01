@@ -31,7 +31,7 @@ namespace Assets.Core.Player
             var playerEntity = EntityManager.Instantiate(prefabEntity);
             EntityManager.AddComponentData(playerEntity, new PlayerComponentData
             {
-                Index = 1 // TODO: use indices for multiplayer support
+                Index = PlayerConstants.LOCAL_PLAYER_INDEX
             });
 
             EntityManager.AddComponentData(playerEntity, new PlayerMovementComponentData { Velocity = float3.zero });

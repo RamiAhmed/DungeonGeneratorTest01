@@ -8,7 +8,7 @@ namespace Assets.Core.Player
     {
         private Entity _localPlayer;
 
-        protected Entity LocalPlayer => _localPlayer == Entity.Null ? (_localPlayer = GetPlayerEntity(1)) : _localPlayer;
+        protected Entity LocalPlayer => _localPlayer == Entity.Null ? (_localPlayer = GetPlayerEntity(PlayerConstants.LOCAL_PLAYER_INDEX)) : _localPlayer;
 
         protected override void OnCreate()
         {
