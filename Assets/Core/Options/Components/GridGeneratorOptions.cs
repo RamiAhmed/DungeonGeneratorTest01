@@ -11,7 +11,8 @@ namespace Assets.Core.Options
         public int cellSize;
         public float sensitivity;
         public int innerloopBatchCount;
-        public int startIndex;
+        public int startX;
+        public int startY;
 
         public override string ToString()
         {
@@ -20,7 +21,7 @@ namespace Assets.Core.Options
 
         public override int GetHashCode()
         {
-            return gridRows.GetHashCode() + gridCols.GetHashCode() + cellSize.GetHashCode() + startIndex.GetHashCode();
+            return gridRows.GetHashCode() + gridCols.GetHashCode() + cellSize.GetHashCode() + startX.GetHashCode() + startY.GetHashCode();
         }
 
         bool IEquatable<GridGeneratorOptions>.Equals(GridGeneratorOptions other)
@@ -28,7 +29,8 @@ namespace Assets.Core.Options
             return gridRows == other.gridRows &&
                    gridCols == other.gridCols &&
                    cellSize == other.cellSize &&
-                   startIndex == other.startIndex;
+                   startX == other.startX &&
+                   startY == other.startY;
         }
     }
 }

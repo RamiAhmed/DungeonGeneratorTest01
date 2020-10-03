@@ -32,7 +32,8 @@ namespace Assets.Core
             _floodState = new NativeArray<byte>(count, Allocator.TempJob);
 
             // Mark starting cell as such
-            _gridState[options.startIndex] = GridStateConstants.START;
+            var startIndex = GridUtils.GetIndex(options.startX, options.startY, options.gridRows);
+            _gridState[startIndex] = GridStateConstants.START;
 
             var gridBoundsBlockerJob = new GridBoundsBlockerJob(_gridState, options.gridCols, options.gridRows);
             var gridBoundsBlockerJobHandle = gridBoundsBlockerJob.Schedule(_gridState.Length, options.innerloopBatchCount);
@@ -40,19 +41,19 @@ namespace Assets.Core
             var gridTanBlockerJob = new GridTanBlockerJob(_gridState, options.gridRows, options.sensitivity);
             var gridTanBlockerJobHandle = gridTanBlockerJob.Schedule(_gridState.Length, options.innerloopBatchCount, gridBoundsBlockerJobHandle);
 
-            var floodFillJob = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows, options.startIndex);
+            var floodFillJob = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows, startIndex);
             var floodFillJobHandle = floodFillJob.Schedule(gridTanBlockerJobHandle);
 
             var gridFloodGateJob = new GridFloodGateJob(_gridState, _floodState, options.gridCols, options.gridRows);
             var gridFloodGateJobHandle = gridFloodGateJob.Schedule(floodFillJobHandle);
 
-            var floodFillJob2 = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows, options.startIndex);
+            var floodFillJob2 = new GridFloodFillJob(_gridState, _cellStack, _floodState, options.gridCols, options.gridRows, startIndex);
             var floodFillJob2Handle = floodFillJob2.Schedule(gridFloodGateJobHandle);
 
             var gridFillerJob = new GridFillerJob(_gridState, _floodState);
             var gridFillerJobHandle = gridFillerJob.Schedule(_gridState.Length, options.innerloopBatchCount, floodFillJob2Handle);
 
-            var gridExitJob = new GridExitJob(_gridState, _floodState, options.gridCols, options.gridRows, options.startIndex);
+            var gridExitJob = new GridExitJob(_gridState, _floodState, options.gridCols, options.gridRows, startIndex);
             var gridExitJobHandle = gridExitJob.Schedule(gridFillerJobHandle);
 
             _jobHandles[0] = gridBoundsBlockerJobHandle;

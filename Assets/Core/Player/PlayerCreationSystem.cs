@@ -1,6 +1,5 @@
 ﻿using Assets.Core.Grid;
 using Assets.Core.Options;
-using System.Linq;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -9,18 +8,18 @@ using UnityEngine;
 namespace Assets.Core.Player
 {
     [UpdateAfter(typeof(GridEnvironmentSystem))]
-    public class PlayerCreationSystem : BaseGridDependentSystem
+    public class PlayerCreationSystem : SystemBase
     {
         private BlobAssetStore _blobAssetStore;
 
         protected override void OnCreate()
         {
-            UnityEngine.Debug.Log($"{this}: OnCreate");
+            Debug.Log($"{this}: OnCreate");
         }
 
         protected override void OnStartRunning()
         {
-            UnityEngine.Debug.Log($"{this}: OnStartRunning");
+            Debug.Log($"{this}: OnStartRunning");
 
             var options = this.GetOptions<PlayerOptions>();
 
@@ -37,9 +36,7 @@ namespace Assets.Core.Player
             EntityManager.AddComponentData(playerEntity, new PlayerMovementComponentData { Velocity = float3.zero });
 
             var gridOptions = this.GetOptions<GridGeneratorOptions>();
-            var startIndex = GetGridState().Single(state => state == GridStateConstants.START);
-            var (x, y) = GridUtils.GetCoordinates(startIndex, gridOptions.gridRows);
-            var startPosition = GridUtils.GetCellCenter(x, y, gridOptions.cellSize);
+            var startPosition = GridUtils.GetCellCenter(gridOptions.startX, gridOptions.startY, gridOptions.cellSize);
 
             // add some player height 
             startPosition = new Vector3(startPosition.x, startPosition.y + 5f, startPosition.z);
