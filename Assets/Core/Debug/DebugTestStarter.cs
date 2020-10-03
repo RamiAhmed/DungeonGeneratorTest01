@@ -1,153 +1,17 @@
-﻿using Assets.Core;
-using Assets.Core.Grid;
-using Unity.Collections;
+﻿using Assets.Core.Options;
 using UnityEngine;
 
 public class DebugTestStarter : MonoBehaviour
 {
-    [Header("Prefabs")]
-    public Transform parent;
-    public GameObject blockPrefab;
-    public GameObject pathPrefab;
-    public GameObject playerPrefab;
-    public GameObject exitPrefab;
-    public GameObject camPrefab;
+    private static DebugTestStarter _instance;
 
-    [Header("Grid")]
-    [Range(0, 100000)]
-    public int gridRows = 100;
+    public static DebugTestStarter Instance => _instance ?? (_instance = FindObjectOfType<DebugTestStarter>());
 
-    public int gridRowsRandom = 50;
+    public CameraOptions cameraOptions;
 
-    [Range(0, 100000)]
-    public int gridCols = 100;
+    public GridGeneratorOptions gridGeneratorOptions;
 
-    public int gridColsRandom = 50;
+    public GridEnvironmentOptions gridEnvironmentOptions;
 
-    [Range(-0.9f, 0.9f)]
-    public float sensitivity = 0.3f;
-
-    [Range(0, 10)]
-    public int cellSize = 1;
-
-    public int startX = 1;
-    public int startY = 1;
-
-    [Header("Jobs")]
-    [Range(1, 20)]
-    public int innerloopBatchCount = 1;
-
-    public Allocator allocatorType = Allocator.TempJob;
-
-    [Header("Camera")]
-    public float cameraOffset = 10f;
-
-    public float cameraSmoothSpeed = 0.25f;
-
-    //public event Action CreateDungeonEvent; 
-
-    //private byte[] _gridState;
-    //private bool[] _floodState;
-
-    //private readonly DungeonLoaderService _dungeonLoader = new DungeonLoaderService();
-
-    // Start is called before the first frame update
-    //void Start()
-    //{
-    //    CreateDungeon();
-    //}
-
-    //public static void CreateDungeonTest()
-    //{
-    //    var obj = FindObjectOfType<DebugTestStarter>();
-    //    obj.CreateDungeon();
-    //}
-
-    public static DungeonOptions GetOptions()
-    {
-        var instance = FindObjectOfType<DebugTestStarter>();
-        if (instance == null)
-            throw new System.Exception();
-
-        return new DungeonOptions
-        {
-            generatorOptions = new GridGeneratorOptions
-            {
-                gridRows = instance.gridRows,
-                gridCols = instance.gridCols,
-                sensitivity = instance.sensitivity,
-                innerloopBatchCount = instance.innerloopBatchCount,
-                allocatorType = instance.allocatorType,
-                startIndex = GridUtils.GetIndex(instance.startX, instance.startY, instance.gridRows)
-            },
-            parent = instance.parent,
-            blockPrefab = instance.blockPrefab,
-            pathPrefab = instance.pathPrefab,
-            playerPrefab = instance.playerPrefab,
-            exitPrefab = instance.exitPrefab,
-            cellSize = instance.cellSize,
-            cameraPrefab = instance.camPrefab,
-            cameraOffset = instance.cameraOffset,
-            cameraSmoothSpeed = instance.cameraSmoothSpeed
-        };
-    }
-
-    //public void CreateDungeon()
-    //{
-    //    this.gridRows = Random.Range(this.gridRows - gridRowsRandom, this.gridRows + gridRowsRandom);
-    //    this.gridCols = Random.Range(this.gridCols - gridColsRandom, this.gridCols + gridColsRandom);
-    //    _dungeonLoader.Generate(new DungeonOptions
-    //    {
-    //        generatorOptions = new GridGeneratorOptions
-    //        {
-    //            gridRows = gridRows,
-    //            gridCols = gridCols,
-    //            sensitivity = sensitivity,
-    //            innerloopBatchCount = innerloopBatchCount,
-    //            allocatorType = allocatorType,
-    //            startIndex = GridUtils.GetIndex(startX, startY, gridRows)
-    //        },
-    //        parent = parent,
-    //        blockPrefab = blockPrefab,
-    //        pathPrefab = pathPrefab,
-    //        playerPrefab = playerPrefab,
-    //        exitPrefab = exitPrefab,
-    //        cellSize = cellSize,
-    //    });
-
-    //    _gridState = _dungeonLoader.gridState;
-    //    _floodState = _dungeonLoader.floodState;
-    //}
-
-    //void OnDrawGizmosSelected()
-    //{
-    //    if (_gridState == null)
-    //        return;
-
-    //    for (int i = 0; i < _gridState.Length; i++)
-    //    {
-    //        var (x, y) = GridUtils.GetCoordinates(i, gridRows);
-    //        var position = GridUtils.GetPositionByCoordinates(x, y, cellSize);
-
-    //        Gizmos.color = GetGizmoColor(i);
-    //        Gizmos.DrawCube(position, Vector3.one * cellSize);
-    //    }
-    //}
-
-    //private Color GetGizmoColor(int index)
-    //{
-    //    if (_gridState[index] == GridStateConstants.START)
-    //        return Color.yellow;
-
-    //    if (_gridState[index] == GridStateConstants.EXIT)
-    //        return Color.magenta;
-
-    //    if (_floodState[index])
-    //        return Color.green;
-
-    //    if (_gridState[index] == GridStateConstants.FREE)
-    //        return Color.gray;
-
-    //    return Color.red;
-    //}
+    public PlayerOptions playerOptions;
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Core.Options;
+using System;
 using System.Diagnostics;
 using Unity.Collections;
 using Unity.Entities;
@@ -8,18 +9,20 @@ namespace Assets.Core.Grid
 {
     public class GridEnvironmentPlacerService : IDisposable
     {
-        private NativeArray<byte> _gridState;
-        private EntityCommandBuffer _commandBuffer;
-        private readonly GridPlacerOptions _options;
+        private readonly GridEnvironmentOptions _environmentOptions;
+        private readonly EntityCommandBuffer _commandBuffer;
+        private readonly GridGeneratorOptions _options;
+        private readonly NativeArray<byte> _gridState;
 
         private Entity[] _prefabs;
         private BlobAssetStore _blobAssetStore;
 
-        public GridEnvironmentPlacerService(GridPlacerOptions options, NativeArray<byte> gridState, EntityCommandBuffer commandBuffer)
+        public GridEnvironmentPlacerService(GridGeneratorOptions options, GridEnvironmentOptions environmentOptions, NativeArray<byte> gridState, EntityCommandBuffer commandBuffer)
         {
             _options = options;
             _gridState = gridState;
             _commandBuffer = commandBuffer;
+            _environmentOptions = environmentOptions;
         }
 
         public void Execute()
@@ -40,7 +43,7 @@ namespace Assets.Core.Grid
             for (int i = 0; i < _gridState.Length; i++)
             {
                 var prefab = GetPrefab(i);
-                var position = GridUtils.GetPositionByIndex(i, _options.rows, _options.cellSize);
+                var position = GridUtils.GetPositionByIndex(i, _options.gridRows, _options.cellSize);
 
                 var entity = _commandBuffer.Instantiate(prefab);
                 _commandBuffer.AddComponent(entity, new GridEntityComponentData
@@ -68,9 +71,9 @@ namespace Assets.Core.Grid
 
             _prefabs = new[]
             {
-                GameObjectConversionUtility.ConvertGameObjectHierarchy(_options.exitPrefab, settings),
-                GameObjectConversionUtility.ConvertGameObjectHierarchy(_options.blockPrefab, settings),
-                GameObjectConversionUtility.ConvertGameObjectHierarchy(_options.pathPrefab, settings)
+                GameObjectConversionUtility.ConvertGameObjectHierarchy(_environmentOptions.exitPrefab, settings),
+                GameObjectConversionUtility.ConvertGameObjectHierarchy(_environmentOptions.blockPrefab, settings),
+                GameObjectConversionUtility.ConvertGameObjectHierarchy(_environmentOptions.pathPrefab, settings)
             };
         }
 

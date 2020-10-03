@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 345831418}
   - component: {fileID: 345831417}
   m_Layer: 0
-  m_Name: DebugTestStarter
+  m_Name: DebugTestOptionsProvider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,22 +152,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a17af12ad8290a645afab2265d48465a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 345831418}
-  blockPrefab: {fileID: 2482848083192869984, guid: 71f1585fe31fe754b86c5f2e4ddc4300, type: 3}
-  pathPrefab: {fileID: 3210322210770421171, guid: bc207e2a116736b4283593bd2a83c35b, type: 3}
-  playerPrefab: {fileID: 149790, guid: 7737647c22c1fc64a88d5cd030c352ce, type: 3}
-  exitPrefab: {fileID: 6699562329660867092, guid: 21a0e421a1aa33d4d98a298bf0e20f78, type: 3}
-  camPrefab: {fileID: 185089485123501059, guid: db3c0a45b6850ac4098bf09edf07fb8d, type: 3}
-  gridRows: 40
-  gridRowsRandom: 50
-  gridCols: 30
-  gridColsRandom: 50
-  sensitivity: 0.2
-  cellSize: 1
-  startX: 1
-  startY: 1
-  innerloopBatchCount: 2
-  allocatorType: 3
+  cameraOptions:
+    cameraPrefab: {fileID: 185089485123501059, guid: db3c0a45b6850ac4098bf09edf07fb8d, type: 3}
+    cameraSmoothSpeed: 0.25
+    cameraOffset: 5
+  gridGeneratorOptions:
+    gridRows: 20
+    gridCols: 20
+    cellSize: 1
+    sensitivity: 0.2
+    innerloopBatchCount: 2
+    startIndex: 21
+  gridEnvironmentOptions:
+    blockPrefab: {fileID: 2482848083192869984, guid: 71f1585fe31fe754b86c5f2e4ddc4300, type: 3}
+    pathPrefab: {fileID: 3210322210770421171, guid: bc207e2a116736b4283593bd2a83c35b, type: 3}
+    exitPrefab: {fileID: 6699562329660867092, guid: 21a0e421a1aa33d4d98a298bf0e20f78, type: 3}
+  playerOptions:
+    playerPrefab: {fileID: 8277280874289165030, guid: 9194426228a6fd84595aa74f8933c6ba, type: 3}
+    playerMoveSpeed: 10
 --- !u!4 &345831418
 Transform:
   m_ObjectHideFlags: 0

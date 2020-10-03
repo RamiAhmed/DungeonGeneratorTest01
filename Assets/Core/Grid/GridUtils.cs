@@ -31,5 +31,10 @@ namespace Assets.Core.Grid
         {
             return new Vector3(x * cellSize, 0f, y * cellSize);
         }
+
+        public static Vector3 GetCellCenter(int x, int y, int cellSize)
+        {
+            return GetPositionByCoordinates(x, y, cellSize) + new Vector3(cellSize * 0.5f, 0f, cellSize * 0.5f);
+        }
     }
 }

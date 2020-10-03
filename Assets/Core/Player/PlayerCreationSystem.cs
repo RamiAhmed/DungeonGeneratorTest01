@@ -1,6 +1,8 @@
 ﻿using Assets.Core.Grid;
+using Assets.Core.Options;
 using System.Linq;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -9,34 +11,38 @@ namespace Assets.Core.Player
     [UpdateAfter(typeof(GridEnvironmentSystem))]
     public class PlayerCreationSystem : BaseGridDependentSystem
     {
-        private EntityArchetype _playerArchetype;
+        private BlobAssetStore _blobAssetStore;
 
         protected override void OnCreate()
         {
             UnityEngine.Debug.Log($"{this}: OnCreate");
-            _playerArchetype = EntityManager.CreateArchetype(
-                typeof(Translation),
-                typeof(Rotation), 
-                typeof(PlayerComponentData), 
-                typeof(PlayerMovementComponentData));
         }
 
         protected override void OnStartRunning()
         {
             UnityEngine.Debug.Log($"{this}: OnStartRunning");
 
-            var playerEntity = EntityManager.CreateEntity(_playerArchetype);
-            EntityManager.SetComponentData(playerEntity, new PlayerComponentData
+            var options = this.GetOptions<PlayerOptions>();
+
+            _blobAssetStore = new BlobAssetStore();
+            var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, _blobAssetStore);
+            var prefabEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(options.playerPrefab, settings);
+
+            var playerEntity = EntityManager.Instantiate(prefabEntity);
+            EntityManager.AddComponentData(playerEntity, new PlayerComponentData
             {
                 Index = 1 // TODO: use indices for multiplayer support
             });
 
-            var options = DebugTestStarter.GetOptions().GetGridPlacerOptions(); // TODO: get options in proper way
+            EntityManager.AddComponentData(playerEntity, new PlayerMovementComponentData { Velocity = float3.zero });
+
+            var gridOptions = this.GetOptions<GridGeneratorOptions>();
             var startIndex = GetGridState().Single(state => state == GridStateConstants.START);
-            var startPosition = GridUtils.GetPositionByIndex(startIndex, options.rows, options.cellSize);
+            var (x, y) = GridUtils.GetCoordinates(startIndex, gridOptions.gridRows);
+            var startPosition = GridUtils.GetCellCenter(x, y, gridOptions.cellSize);
 
             // add some player height 
-            startPosition = new Vector3(startPosition.x, startPosition.y + 1.5f, startPosition.z);
+            startPosition = new Vector3(startPosition.x, startPosition.y + 5f, startPosition.z);
 
             EntityManager.SetComponentData(playerEntity, new Translation { Value = startPosition });
         }
@@ -44,6 +50,11 @@ namespace Assets.Core.Player
         protected override void OnUpdate()
         {
             /* NOOP */
+        }
+
+        protected override void OnDestroy()
+        {
+            _blobAssetStore?.Dispose();
         }
     }
 }

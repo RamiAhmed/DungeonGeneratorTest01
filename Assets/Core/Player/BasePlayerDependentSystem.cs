@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Transforms;
 
 namespace Assets.Core.Player
 {
@@ -27,6 +26,11 @@ namespace Assets.Core.Player
             using var entities = query.ToEntityArray(Allocator.TempJob);
 
             return entities.SingleOrDefault(entity => EntityManager.GetComponentData<PlayerComponentData>(entity).Index == index);
+        }
+
+        protected override void OnDestroy()
+        {
+            _localPlayer = Entity.Null;
         }
     }
 }

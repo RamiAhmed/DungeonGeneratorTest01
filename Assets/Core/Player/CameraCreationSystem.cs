@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Assets.Core.Options;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
@@ -18,7 +19,7 @@ namespace Assets.Core.Player
         {
             UnityEngine.Debug.Log($"{this}: OnStartRunning");
 
-            var options = DebugTestStarter.GetOptions(); // TODO: get options in proper way
+            var options = this.GetOptions<CameraOptions>();
             var camPrefab = options.cameraPrefab;
 
             _blobAssetStore = new BlobAssetStore();

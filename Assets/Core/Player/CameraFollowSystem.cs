@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Assets.Core.Options;
+using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -9,24 +10,22 @@ namespace Assets.Core.Player
     [UpdateAfter(typeof(PlayerMovementSystem))]
     public class CameraFollowSystem : BasePlayerDependentSystem
     {
-        private DungeonOptions _options;
+        private CameraOptions _options;
 
-        protected override void OnCreate()
+        protected override void OnStartRunning()
         {
-            base.OnCreate();
-
-            _options = DebugTestStarter.GetOptions(); // TODO: get options in proper way
+            base.OnStartRunning();
+            _options = this.GetOptions<CameraOptions>();
         }
 
         protected override void OnUpdate()
         {
-            var deltaTime = Time.DeltaTime;
             var offset = _options.cameraOffset;
             var cameraSmoothSpeed = _options.cameraSmoothSpeed;
-
-            var player = LocalPlayer;
+            var deltaTime = Time.DeltaTime;
 
             // check if player exist
+            var player = LocalPlayer;
             if (player == Entity.Null)
                 return;
 
