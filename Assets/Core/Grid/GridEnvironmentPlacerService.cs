@@ -1,8 +1,10 @@
 ﻿using Assets.Core.Options;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Physics;
 using Unity.Transforms;
 
 namespace Assets.Core.Grid
@@ -13,14 +15,17 @@ namespace Assets.Core.Grid
         private readonly EntityCommandBuffer _commandBuffer;
         private readonly GridGeneratorOptions _options;
         private readonly NativeArray<byte> _gridState;
+        private readonly EntityManager _entityManager;
 
         private Entity[] _prefabs;
+        private PhysicsCollider?[] _prefabColliders;
         private BlobAssetStore _blobAssetStore;
 
-        public GridEnvironmentPlacerService(GridGeneratorOptions options, GridEnvironmentOptions environmentOptions, NativeArray<byte> gridState, EntityCommandBuffer commandBuffer)
+        public GridEnvironmentPlacerService(EntityManager entityManager, GridGeneratorOptions options, GridEnvironmentOptions environmentOptions, NativeArray<byte> gridState, EntityCommandBuffer commandBuffer)
         {
             _options = options;
             _gridState = gridState;
+            _entityManager = entityManager;
             _commandBuffer = commandBuffer;
             _environmentOptions = environmentOptions;
         }
@@ -52,6 +57,12 @@ namespace Assets.Core.Grid
                 });
 
                 _commandBuffer.SetComponent(entity, new Translation { Value = position });
+
+                var collider = GetPhysicsCollider(i);
+                if (collider == null || !collider.Value.IsValid)
+                    continue;
+
+                _commandBuffer.SetComponent(entity, new PhysicsCollider { Value = collider.Value.Value });
             }
         }
 
@@ -75,6 +86,24 @@ namespace Assets.Core.Grid
                 GameObjectConversionUtility.ConvertGameObjectHierarchy(_environmentOptions.blockPrefab, settings),
                 GameObjectConversionUtility.ConvertGameObjectHierarchy(_environmentOptions.pathPrefab, settings)
             };
+
+            _prefabColliders = _prefabs
+                .Select(prefab => 
+                    _entityManager.HasComponent<PhysicsCollider>(prefab) 
+                    ? _entityManager.GetComponentData<PhysicsCollider>(prefab) 
+                    : (PhysicsCollider?) null)
+                .ToArray();
+        }
+
+        private PhysicsCollider? GetPhysicsCollider(int index)
+        {
+            if (_gridState[index] == GridStateConstants.EXIT)
+                return _prefabColliders[0];
+
+            if (_gridState[index] == GridStateConstants.BLOCKED)
+                return _prefabColliders[1];
+
+            return _prefabColliders[2];
         }
 
         private Entity GetPrefab(int index)
@@ -90,6 +119,8 @@ namespace Assets.Core.Grid
 
         public void Dispose()
         {
+            _prefabs = null;
+            _prefabColliders = null;
             _blobAssetStore?.Dispose();
         }
     }

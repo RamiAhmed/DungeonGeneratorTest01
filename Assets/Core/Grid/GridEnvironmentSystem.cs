@@ -32,6 +32,7 @@ namespace Assets.Core
 
             var commandBuffer = _entityCommandBufferSystem.CreateCommandBuffer();
             _gridPlacerService = new GridEnvironmentPlacerService(
+                EntityManager,
                 generatorOptions,
                 environmentOptions,
                 gridState,
