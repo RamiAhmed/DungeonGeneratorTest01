@@ -29,11 +29,12 @@ namespace Assets.Core.Player
 
             Entities
                 .WithName("PlayerMovementSystem_ForEach")
+                .WithBurst()
                 .ForEach((ref PhysicsVelocity physicsVelocity, ref Rotation rotation, in PlayerMovementComponentData playerMove) =>
                 {
                     physicsVelocity.Linear = math.mul(rotation.Value, playerMove.Velocity) * playerMoveSpeed * deltaTime;
                 })
-                .ScheduleParallel();
+                .Schedule();
         }
     }
 }
