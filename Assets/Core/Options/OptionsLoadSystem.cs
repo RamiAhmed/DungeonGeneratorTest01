@@ -10,16 +10,16 @@ namespace Assets.Core.Options
 
             var debugOptions = DebugTestStarter.Instance; // TODO: get options in proper way
 
-            CreateOptionsEntity(debugOptions.cameraOptions);
-            CreateOptionsEntity(debugOptions.gridEnvironmentOptions);
-            CreateOptionsEntity(debugOptions.gridGeneratorOptions);
-            CreateOptionsEntity(debugOptions.playerOptions);
-        }
+            var entity = EntityManager.CreateEntity(
+                typeof(CameraOptions),
+                typeof(GridEnvironmentOptions), 
+                typeof(GridGeneratorOptions), 
+                typeof(PlayerOptions));
 
-        private void CreateOptionsEntity<T>(T options) where T : struct, ISystemStateSharedComponentData
-        {
-            var entity = EntityManager.CreateEntity(typeof(T));
-            EntityManager.SetSharedComponentData(entity, options);
+            EntityManager.SetSharedComponentData(entity, debugOptions.cameraOptions);
+            EntityManager.SetSharedComponentData(entity, debugOptions.gridEnvironmentOptions);
+            EntityManager.SetSharedComponentData(entity, debugOptions.gridGeneratorOptions);
+            EntityManager.SetSharedComponentData(entity, debugOptions.playerOptions);
         }
 
         protected override void OnStartRunning()
