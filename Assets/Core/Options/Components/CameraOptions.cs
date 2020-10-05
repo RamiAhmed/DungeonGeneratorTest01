@@ -4,10 +4,9 @@ using UnityEngine;
 
 namespace Assets.Core.Options
 {
-    [Serializable]
     public struct CameraOptions : ISystemStateSharedComponentData, IEquatable<CameraOptions>
     {
-        public GameObject cameraPrefab;
+        public Entity cameraPrefab;
 
         public float cameraSmoothSpeed;
         public float cameraOffset;

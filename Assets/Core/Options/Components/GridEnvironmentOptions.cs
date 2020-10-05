@@ -4,12 +4,11 @@ using UnityEngine;
 
 namespace Assets.Core.Options
 {
-    [Serializable]
     public struct GridEnvironmentOptions : ISystemStateSharedComponentData, IEquatable<GridEnvironmentOptions>
     {
-        public GameObject blockPrefab;
-        public GameObject pathPrefab;
-        public GameObject exitPrefab;
+        public Entity blockPrefab;
+        public Entity pathPrefab;
+        public Entity exitPrefab;
 
         public override string ToString()
         {

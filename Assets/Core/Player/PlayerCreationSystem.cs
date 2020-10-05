@@ -10,8 +10,6 @@ namespace Assets.Core.Player
     [UpdateAfter(typeof(GridEnvironmentSystem))]
     public class PlayerCreationSystem : SystemBase
     {
-        private BlobAssetStore _blobAssetStore;
-
         protected override void OnCreate()
         {
             Debug.Log($"{this}: OnCreate");
@@ -23,11 +21,7 @@ namespace Assets.Core.Player
 
             var options = this.GetOptions<PlayerOptions>();
 
-            _blobAssetStore = new BlobAssetStore();
-            var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, _blobAssetStore);
-            var prefabEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(options.playerPrefab, settings);
-
-            var playerEntity = EntityManager.Instantiate(prefabEntity);
+            var playerEntity = EntityManager.Instantiate(options.playerPrefab);
             EntityManager.AddComponentData(playerEntity, new PlayerComponentData
             {
                 Index = PlayerConstants.LOCAL_PLAYER_INDEX
@@ -47,11 +41,6 @@ namespace Assets.Core.Player
         protected override void OnUpdate()
         {
             /* NOOP */
-        }
-
-        protected override void OnDestroy()
-        {
-            _blobAssetStore?.Dispose();
         }
     }
 }

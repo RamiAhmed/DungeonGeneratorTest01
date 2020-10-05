@@ -4,10 +4,9 @@ using UnityEngine;
 
 namespace Assets.Core.Options
 {
-    [Serializable]
     public struct PlayerOptions : ISystemStateSharedComponentData, IEquatable<PlayerOptions>
     {
-        public GameObject playerPrefab;
+        public Entity playerPrefab;
         public float playerMoveSpeed;
 
         public override string ToString()

@@ -133,6 +133,8 @@ GameObject:
   m_Component:
   - component: {fileID: 197807789}
   - component: {fileID: 197807788}
+  - component: {fileID: 197807791}
+  - component: {fileID: 197807790}
   m_Layer: 0
   m_Name: Physics
   m_TagString: Untagged
@@ -152,12 +154,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d30974bf68d61043b1572197db94cdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SimulationType: 2
+  m_SimulationType: 1
   m_Gravity:
     x: -0
     y: -9.81
     z: -0
-  m_SolverIterationCount: 4
+  m_SolverIterationCount: 2
   m_EnableSolverStabilizationHeuristic: 0
   m_ThreadCountHint: 8
   m_SynchronizeCollisionWorld: 0
@@ -175,6 +177,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &197807790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197807787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 1
+--- !u!114 &197807791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197807787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb54ea4f67dc17342bcd49954c53502d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DrawColliders: 0
+  DrawColliderEdges: 0
+  DrawColliderAabbs: 0
+  DrawBroadphase: 0
+  DrawMassProperties: 0
+  DrawContacts: 0
+  DrawCollisionEvents: 0
+  DrawTriggerEvents: 0
+  DrawJoints: 0
 --- !u!1 &345831416
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,9 +220,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 345831418}
+  - component: {fileID: 345831422}
+  - component: {fileID: 345831421}
+  - component: {fileID: 345831420}
+  - component: {fileID: 345831419}
   - component: {fileID: 345831417}
-  m_Layer: 0
-  m_Name: DebugTestOptionsProvider
+  m_Layer: 1
+  m_Name: OptionsAuthoringComponents
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -201,28 +241,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 345831416}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a17af12ad8290a645afab2265d48465a, type: 3}
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraOptions:
-    cameraPrefab: {fileID: 185089485123501059, guid: db3c0a45b6850ac4098bf09edf07fb8d, type: 3}
-    cameraSmoothSpeed: 0.25
-    cameraOffset: 5
-  gridGeneratorOptions:
-    gridRows: 20
-    gridCols: 20
-    cellSize: 1
-    sensitivity: 0.2
-    innerloopBatchCount: 2
-    startX: 1
-    startY: 1
-  gridEnvironmentOptions:
-    blockPrefab: {fileID: 2482848083192869984, guid: 71f1585fe31fe754b86c5f2e4ddc4300, type: 3}
-    pathPrefab: {fileID: 3210322210770421171, guid: bc207e2a116736b4283593bd2a83c35b, type: 3}
-    exitPrefab: {fileID: 6699562329660867092, guid: 21a0e421a1aa33d4d98a298bf0e20f78, type: 3}
-  playerOptions:
-    playerPrefab: {fileID: 8277280874289165030, guid: 9194426228a6fd84595aa74f8933c6ba, type: 3}
-    playerMoveSpeed: 10
+  ConversionMode: 0
 --- !u!4 &345831418
 Transform:
   m_ObjectHideFlags: 0
@@ -237,6 +259,69 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &345831419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345831416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 515aaabbad16f2545aecb774f382c971, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 8277280874289165030, guid: 9194426228a6fd84595aa74f8933c6ba, type: 3}
+  playerMoveSpeed: 10
+--- !u!114 &345831420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345831416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10c801dd266e7dd4aaabd7b14bc5fcbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridRows: 40
+  gridCols: 40
+  cellSize: 1
+  sensitivity: 0.2
+  innerloopBatchCount: 2
+  startX: 1
+  startY: 1
+--- !u!114 &345831421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345831416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc4348a3a94811444ab8ca619d932930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockPrefab: {fileID: 2482848083192869984, guid: 71f1585fe31fe754b86c5f2e4ddc4300, type: 3}
+  pathPrefab: {fileID: 3210322210770421171, guid: bc207e2a116736b4283593bd2a83c35b, type: 3}
+  exitPrefab: {fileID: 6699562329660867092, guid: 21a0e421a1aa33d4d98a298bf0e20f78, type: 3}
+--- !u!114 &345831422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345831416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0445f525d450a3140b4429927babeb93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraPrefab: {fileID: 185089485123501059, guid: db3c0a45b6850ac4098bf09edf07fb8d, type: 3}
+  cameraSmoothSpeed: 0.25
+  cameraOffset: 4
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

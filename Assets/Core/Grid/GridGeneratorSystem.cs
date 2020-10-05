@@ -6,7 +6,6 @@ using Unity.Jobs;
 
 namespace Assets.Core
 {
-    [UpdateAfter(typeof(OptionsLoadSystem))]
     public class GridGeneratorSystem : SystemBase
     { 
         private NativeArray<int> _cellStack;

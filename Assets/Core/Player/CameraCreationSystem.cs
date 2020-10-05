@@ -8,8 +8,6 @@ namespace Assets.Core.Player
     [UpdateAfter(typeof(GridEnvironmentSystem))]
     public class CameraCreationSystem : SystemBase
     {
-        private BlobAssetStore _blobAssetStore;
-
         protected override void OnCreate()
         {
             UnityEngine.Debug.Log($"{this}: OnCreate");
@@ -22,26 +20,14 @@ namespace Assets.Core.Player
             var options = this.GetOptions<CameraOptions>();
             var camPrefab = options.cameraPrefab;
 
-            _blobAssetStore = new BlobAssetStore();
-            var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, _blobAssetStore);
-            var prefabEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(camPrefab, settings);
-
-            var entity = EntityManager.Instantiate(prefabEntity);
+            var entity = EntityManager.Instantiate(camPrefab);
             EntityManager.SetComponentData(entity, new Translation { Value = float3.zero });
             EntityManager.AddComponentData(entity, new PlayerCameraComponentData { });
-
-            // clean up - destroy prefab entity
-            EntityManager.DestroyEntity(prefabEntity);
         }
 
         protected override void OnUpdate()
         {
             /* NOOP */
-        }
-
-        protected override void OnDestroy()
-        {
-            _blobAssetStore?.Dispose();
         }
     }
 }

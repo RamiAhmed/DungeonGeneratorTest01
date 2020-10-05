@@ -19,7 +19,6 @@ namespace Assets.Core.Grid
 
         private Entity[] _prefabs;
         private PhysicsCollider?[] _prefabColliders;
-        private BlobAssetStore _blobAssetStore;
 
         public GridEnvironmentPlacerService(EntityManager entityManager, GridGeneratorOptions options, GridEnvironmentOptions environmentOptions, NativeArray<byte> gridState, EntityCommandBuffer commandBuffer)
         {
@@ -37,8 +36,6 @@ namespace Assets.Core.Grid
             PreparePrefabs();
 
             InstantiatePrefabs();
-
-            CleanupPrefabs();
 
             UnityEngine.Debug.Log($"{this} took {watch.Elapsed}");
         }
@@ -66,25 +63,13 @@ namespace Assets.Core.Grid
             }
         }
 
-        private void CleanupPrefabs()
-        {
-            // Destroy the prefabs - clean up
-            foreach (var prefab in _prefabs)
-            {
-                _commandBuffer.DestroyEntity(prefab);
-            }
-        }
-
         private void PreparePrefabs()
         {
-            _blobAssetStore = new BlobAssetStore();
-            var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, _blobAssetStore);
-
             _prefabs = new[]
             {
-                GameObjectConversionUtility.ConvertGameObjectHierarchy(_environmentOptions.exitPrefab, settings),
-                GameObjectConversionUtility.ConvertGameObjectHierarchy(_environmentOptions.blockPrefab, settings),
-                GameObjectConversionUtility.ConvertGameObjectHierarchy(_environmentOptions.pathPrefab, settings)
+                _environmentOptions.exitPrefab,
+                _environmentOptions.blockPrefab,
+                _environmentOptions.pathPrefab
             };
 
             _prefabColliders = _prefabs
@@ -121,7 +106,6 @@ namespace Assets.Core.Grid
         {
             _prefabs = null;
             _prefabColliders = null;
-            _blobAssetStore?.Dispose();
         }
     }
 }
