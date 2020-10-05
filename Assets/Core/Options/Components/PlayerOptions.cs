@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Core.Options
 {
-    public struct PlayerOptions : ISystemStateSharedComponentData, IEquatable<PlayerOptions>
+    public struct PlayerOptions : IComponentData, IEquatable<PlayerOptions>
     {
         public Entity playerPrefab;
         public float playerMoveSpeed;

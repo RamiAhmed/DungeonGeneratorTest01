@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Core.Options
 {
-    public struct GridEnvironmentOptions : ISystemStateSharedComponentData, IEquatable<GridEnvironmentOptions>
+    public struct GridEnvironmentOptions : IComponentData, IEquatable<GridEnvironmentOptions>
     {
         public Entity blockPrefab;
         public Entity pathPrefab;

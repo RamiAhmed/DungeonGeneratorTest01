@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Core.Options
 {
-    public struct CameraOptions : ISystemStateSharedComponentData, IEquatable<CameraOptions>
+    public struct CameraOptions : IComponentData, IEquatable<CameraOptions>
     {
         public Entity cameraPrefab;
 

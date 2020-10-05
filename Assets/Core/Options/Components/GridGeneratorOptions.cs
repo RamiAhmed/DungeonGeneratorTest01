@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace Assets.Core.Options
 {
-    public struct GridGeneratorOptions : ISystemStateSharedComponentData, IEquatable<GridGeneratorOptions>
+    public struct GridGeneratorOptions : IComponentData, IEquatable<GridGeneratorOptions>
     {
         public int gridRows;
         public int gridCols;
